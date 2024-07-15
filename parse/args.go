@@ -11,19 +11,27 @@ func arguments() []string {
 	return os.Args[1:len(os.Args)]
 }
 
-func argsEmpty() bool {
-	return len(arguments()) <= 0
-}
-
-func argsStartsWith(command Command) bool {
-	args := arguments()
-
-	if command.Triggers == nil || len(command.Triggers) <= 0 {
-		return "--" + args[0] == command.Code
+func argMatchesCommand(args []string, index int, command Command) bool {
+	if args[index] == command.Code {
+		return true
 	}
 
 	for _, trigger := range(command.Triggers) {
-		if args[0] == trigger {
+		if args[index] == trigger {
+			return true
+		}
+	}
+
+	return false
+}
+
+func argMatchesSubCommand(args []string, index int, command SubCommand) bool {
+	if args[index] == command.Code {
+		return true
+	}
+
+	for _, trigger := range(command.Triggers) {
+		if args[index] == trigger {
 			return true
 		}
 	}

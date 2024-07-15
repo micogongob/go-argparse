@@ -11,19 +11,21 @@ type Command struct {
 	Triggers []string
 	Description string
 	SubCommands []SubCommand
+	helpCommand SubCommand
 }
 
 type SubCommand struct {
 	Code string
 	Triggers []string
 	Description string
-	Arguments []Argument
+	Parameters []Parameter
 }
 
-type Argument struct {
+type Parameter struct {
 	Code string
 	Triggers []string
 	Description string
+	Required bool
 	IsFlag bool
 }
 
