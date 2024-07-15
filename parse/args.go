@@ -11,12 +11,12 @@ func arguments() []string {
 	return os.Args[1:len(os.Args)]
 }
 
-func argMatchesCommand(args []string, index int, command Command) bool {
-	if args[index] == command.Code {
+func argMatches(args []string, index int, pattern string, triggers []string) bool {
+	if args[index] == pattern {
 		return true
 	}
 
-	for _, trigger := range(command.Triggers) {
+	for _, trigger := range(triggers) {
 		if args[index] == trigger {
 			return true
 		}
@@ -25,14 +25,19 @@ func argMatchesCommand(args []string, index int, command Command) bool {
 	return false
 }
 
-func argMatchesSubCommand(args []string, index int, command SubCommand) bool {
-	if args[index] == command.Code {
+func isValidParameter(args []string, parameter Parameter) bool {
+	if parameter.Optional {
 		return true
 	}
 
-	for _, trigger := range(command.Triggers) {
-		if args[index] == trigger {
+	for i := 2; i < len(args); i++ {
+		if "--" + args[i] == parameter.Code {
 			return true
+		}
+		for _, trigger := range(parameter.Triggers) {
+			if args[i] == trigger {
+				return true
+			}
 		}
 	}
 

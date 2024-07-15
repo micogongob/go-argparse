@@ -25,7 +25,7 @@ type Parameter struct {
 	Code string
 	Triggers []string
 	Description string
-	Required bool
+	Optional bool
 	IsFlag bool
 }
 

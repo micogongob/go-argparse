@@ -42,7 +42,7 @@ func main() {
 					Parameters: []parse.Parameter{
 						{
 							Code: "bucket-name",
-							Description: "Code of the S3 bucket to create",
+							Description: "Name of the S3 bucket to create",
 						},
 						{
 							Code: "type",
