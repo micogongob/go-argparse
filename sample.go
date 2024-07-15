@@ -10,42 +10,42 @@ import (
 func main() {
 	app := parse.NewApp("Cli tool that helps you do stuff", []parse.Command{
 		{
-			Code: "sqs",
-			Triggers: []string{"sqs"},
+			Code:        "sqs",
+			Triggers:    []string{"sqs"},
 			Description: "Do SQS stuff",
 			SubCommands: []parse.SubCommand{
 				{
-					Code: "list-queues",
+					Code:        "list-queues",
 					Description: "Lists the SQS quues",
 					Parameters: []parse.Parameter{
 						{
-							Code: "queue-name",
+							Code:        "queue-name",
 							Description: "name of the queue",
 						},
 						{
-							Code: "json",
-							Triggers: []string{"-j", "-json"},
+							Code:        "json",
+							Triggers:    []string{"-j", "-json"},
 							Description: "Output in JSON",
-							IsFlag: true,
+							IsFlag:      true,
 						},
 					},
 				},
 			},
 		},
 		{
-			Code: "s3",
+			Code:        "s3",
 			Description: "Do S3 Bucket stuff",
 			SubCommands: []parse.SubCommand{
 				{
-					Code: "make-bucket",
+					Code:        "make-bucket",
 					Description: "Creates S3 bucket",
 					Parameters: []parse.Parameter{
 						{
-							Code: "bucket-name",
+							Code:        "bucket-name",
 							Description: "Name of the S3 bucket to create",
 						},
 						{
-							Code: "type",
+							Code:        "type",
 							Description: "standard/infrequent_access",
 						},
 					},

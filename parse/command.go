@@ -15,16 +15,16 @@ func (command *Command) Parse() *ParseOutput {
 	} else if argMatches(args, 1, command.helpCommand.Code, command.helpCommand.Triggers) {
 		command.showHelp()
 		return &ParseOutput{
-			Code: command.Code,
+			Code:           command.Code,
 			ArgumentValues: map[string]string{},
 		}
 	} else {
 		isCommandMatched := false
 
-		for _, subCommand := range(command.SubCommands) {
+		for _, subCommand := range command.SubCommands {
 			if argMatches(args, 1, subCommand.Code, subCommand.Triggers) {
 				return &ParseOutput{
-					Code: subCommand.Code,
+					Code:           subCommand.Code,
 					ArgumentValues: subCommand.toParsedMap(),
 				}
 			}
@@ -43,7 +43,7 @@ func (command *Command) showHelp() {
 	if len(command.SubCommands) > 0 {
 		fmt.Printf("\nSub-Commands:\n")
 		// TODO format output
-		for _, subCommand := range(command.SubCommands) {
+		for _, subCommand := range command.SubCommands {
 			subCommand.showHelp()
 		}
 	} else {
@@ -53,7 +53,7 @@ func (command *Command) showHelp() {
 
 func (subCommand *SubCommand) showHelp() {
 	fmt.Printf("    %v - %v\n", subCommand.Code, subCommand.Description)
-	for _, parameter := range(subCommand.Parameters) {
+	for _, parameter := range subCommand.Parameters {
 		alternativeTriggers := ""
 		if len(parameter.Triggers) > 0 {
 			alternativeTriggers = fmt.Sprintf(" (alt. %v)", strings.Join(parameter.Triggers, ","))
@@ -75,8 +75,8 @@ func (subCommand *SubCommand) toParsedMap() map[string]string {
 	unknownParameterValues := []string{}
 	for i := 2; i < len(args); i++ {
 		matchedArg := false
-		for _, parameter := range(subCommand.Parameters) {
-			if argMatches(args, i, "--" + parameter.Code, parameter.Triggers) {
+		for _, parameter := range subCommand.Parameters {
+			if argMatches(args, i, "--"+parameter.Code, parameter.Triggers) {
 				matchedArg = true
 			}
 		}
@@ -88,7 +88,7 @@ func (subCommand *SubCommand) toParsedMap() map[string]string {
 		internal.Fail(fmt.Sprintf("Unknown parameters was provided: %v", strings.Join(unknownParameterValues, ",")))
 	}
 
-	for _, parameter := range(subCommand.Parameters) {
+	for _, parameter := range subCommand.Parameters {
 		if !isValidParameter(args, parameter) {
 			subCommand.showHelp()
 			internal.Fail(fmt.Sprintf("--%v was not provided", parameter.Code))

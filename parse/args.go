@@ -16,7 +16,7 @@ func argMatches(args []string, index int, pattern string, triggers []string) boo
 		return true
 	}
 
-	for _, trigger := range(triggers) {
+	for _, trigger := range triggers {
 		if args[index] == trigger {
 			return true
 		}
@@ -31,10 +31,10 @@ func isValidParameter(args []string, parameter Parameter) bool {
 	}
 
 	for i := 2; i < len(args); i++ {
-		if "--" + args[i] == parameter.Code {
+		if "--"+args[i] == parameter.Code {
 			return true
 		}
-		for _, trigger := range(parameter.Triggers) {
+		for _, trigger := range parameter.Triggers {
 			if args[i] == trigger {
 				return true
 			}

@@ -1,19 +1,19 @@
 package parse
 
 func NewApp(description string, commands []Command) App {
-	for index, command := range(commands) {
+	for index, command := range commands {
 		subCommandhelpCommand := SubCommand{
-			Code: "help",
-			Triggers: []string{"--help", "-h"},
+			Code:        "help",
+			Triggers:    []string{"--help", "-h"},
 			Description: "Show Help",
-		} 
+		}
 		commands[index].helpCommand = subCommandhelpCommand
 		commands[index].SubCommands = append(command.SubCommands, subCommandhelpCommand)
 	}
 
 	helpCommand := Command{
-		Code: "help",
-		Triggers: []string{"--help", "-h"},
+		Code:        "help",
+		Triggers:    []string{"--help", "-h"},
 		Description: "Show Help",
 	}
 
@@ -21,7 +21,7 @@ func NewApp(description string, commands []Command) App {
 
 	return App{
 		Description: description,
-		Commands: commands,
+		Commands:    commands,
 		helpCommand: helpCommand,
 	}
 }
