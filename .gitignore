@@ -1,0 +1,11 @@
+# mac
+**/.DS_Store
+
+# docker
+**/.env
+
+# go
+**/vendor
+**/*.so
+bin/**
+!bin/.gitkeep
