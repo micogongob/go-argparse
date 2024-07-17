@@ -1,14 +1,12 @@
-package main
+package tests
 
 import (
 	"fmt"
-
-	"github.com/micogongob/go-argparse/internal"
 	"github.com/micogongob/go-argparse/parse"
 )
 
-func main() {
-	app := parse.NewApp("Cli tool that helps you do stuff", []parse.Command{
+func newTestApp() parse.App {
+	return parse.NewApp("Cli tool that helps you do stuff", []parse.Command{
 		{
 			Code:        "sqs",
 			Triggers:    []string{"sqs"},
@@ -28,6 +26,9 @@ func main() {
 							Description: "Output in JSON",
 							IsFlag:      true,
 						},
+					},
+					OnCommand: func(pv map[string]string) error {
+						return listQueues(pv)
 					},
 				},
 			},
@@ -49,38 +50,21 @@ func main() {
 							Description: "standard/infrequent_access",
 						},
 					},
+					OnCommand: func(pv map[string]string) error {
+						return makeBucket(pv)
+					},
 				},
 			},
 		},
 	})
-
-	parsedCommand := app.Parse()
-	switch true {
-	case parsedCommand == nil:
-		internal.Fail("Unknown command provided")
-	case parsedCommand.Code == "sqs":
-		handleSqs(parsedCommand)
-	case parsedCommand.Code == "s3":
-		handleS3(parsedCommand)
-	}
 }
 
-func handleSqs(command *parse.Command) {
-	output := command.Parse()
-	switch true {
-	case output == nil:
-		internal.Fail("Unknown SQS command")
-	case output.Code == "list-queues":
-		fmt.Println("Here are the queues")
-	}
+func listQueues(paramValues map[string]string) error {
+	fmt.Println("Listing queues")
+	return nil
 }
 
-func handleS3(command *parse.Command) {
-	output := command.Parse()
-	switch true {
-	case output == nil:
-		internal.Fail("Unknown S3 command")
-	case output.Code == "make-bucket":
-		fmt.Println("Creating bucket")
-	}
+func makeBucket(paramValues map[string]string) error {
+	fmt.Println("Making bucket")
+	return nil
 }
