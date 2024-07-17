@@ -3,33 +3,40 @@ package parse
 type App struct {
 	Description string
 	Commands    []Command
-	helpCommand Command
+	HelpCommand Command
 }
 
 type Command struct {
 	Code        string
-	Triggers    []string
 	Description string
+	Triggers    []string
 	SubCommands []SubCommand
-	helpCommand SubCommand
+	HelpCommand SubCommand
+	OnCommand   func(paramValues map[string]string) error
 }
 
 type SubCommand struct {
 	Code        string
-	Triggers    []string
 	Description string
+	Triggers    []string
 	Parameters  []Parameter
+	OnCommand   func(paramValues map[string]string) error
 }
 
 type Parameter struct {
 	Code        string
-	Triggers    []string
 	Description string
+	Triggers    []string
 	Optional    bool
 	IsFlag      bool
 }
 
-type ParseOutput struct {
-	Code           string
-	ArgumentValues map[string]string
+type HelpInfo struct {
+	code        *string
+	description string
+	subHelpInfo []HelpInfo
+}
+
+type HelpInfoProvider interface {
+	helpInfo() HelpInfo
 }
