@@ -1,5 +1,6 @@
 package parse
 
+
 func NewCommand(code, description string) *Command {
 	return &Command{
 		code:        code,
@@ -8,15 +9,22 @@ func NewCommand(code, description string) *Command {
 	}
 }
 
-func (command *Command) AddChildrenCommand(code, description string) {
-	// TODO might be different struct
-	childCommand := &Command{
+func (command *Command) AddChildrenCommand(code, description string, parameters ...Parameter) {
+	childCommand := &ChildCommand{
 		code:        code,
 		description: description,
-		aliases:     []string{},  // TODO don't support aliases outside for now
-		children:    []Command{}, // TODO might be parameters instead of commands
+		parameters:  parameters,
 	}
 	command.children = append(command.children, *childCommand)
+}
+
+func NewParameter(code, description string, isOptional, isFlag bool) Parameter {
+	return Parameter{
+		code: code,
+		description: description,
+		isOptional: isOptional,
+		isFlag: isFlag,
+	}
 }
 
 func NewApp(code, description string, commands ...*Command) App {

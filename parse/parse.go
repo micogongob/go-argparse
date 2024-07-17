@@ -6,7 +6,7 @@ import (
 )
 
 func (app *App) Parse() {
-	out, err := app.parseStrings(arguments())
+	out, err := app.parseStrings(tail(os.Args))
 
 	if err != nil {
 		os.Exit(1)
@@ -20,13 +20,13 @@ func (app *App) Parse() {
 func (app *App) parseStrings(args []string) (parseOutput, error) {
 	if len(args) > 0 {
 		for _, command := range app.commands {
-			if command.matches(args[0]) {
+			if commandMatchesArg(command.code, command.aliases, args[0]) {
 				if command.code == HelpCommand.code {
 					return parseOutput{
 						helpMessage: helpToString(app.Help()),
 					}, nil
 				} else {
-					return command.parseStrings(args)
+					return command.parseStrings(tail(args))
 				}
 			}
 		}
@@ -39,9 +39,29 @@ func (app *App) parseStrings(args []string) (parseOutput, error) {
 
 func (command *Command) parseStrings(args []string) (parseOutput, error) {
 	if len(args) > 0 {
-		for _, command := range command.children {
-			if command.matches(args[0]) {
-				if command.code == HelpChildCommand.code {
+		for _, childCommand := range command.children {
+			if commandMatchesArg(childCommand.code, childCommand.aliases, args[0]) {
+				if childCommand.code == HelpChildCommand.code {
+					return parseOutput{
+						helpMessage: helpToString(command.Help()),
+					}, nil
+				} else {
+					return childCommand.parseStrings(tail(args))
+				}
+			}
+		}
+	}
+
+	return parseOutput{
+		helpMessage: helpToString(command.Help()),
+	}, nil
+}
+
+func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
+	if len(args) > 0 {
+		for _, parameter := range command.parameters {
+			if commandMatchesArg(parameter.code, []string{}, args[0]) {
+				if parameter.code == HelpChildCommand.code {
 					return parseOutput{
 						helpMessage: helpToString(command.Help()),
 					}, nil

@@ -11,7 +11,7 @@ var HelpCommand = Command{
 	aliases:     []string{"--help", "-h"},
 }
 
-var HelpChildCommand = Command{
+var HelpChildCommand = ChildCommand{
 	code:        "help",
 	description: "Show help",
 	aliases:     []string{"--help", "-h"},
@@ -21,7 +21,6 @@ func helpToString(help helpInfo) string {
 	var sb strings.Builder
 
 	sb.WriteString(fmt.Sprintf("%v\n\n", help.description))
-	// TODO format
 	if help.usageSuffix != "" {
 		sb.WriteString(fmt.Sprintf("  usage: %v %v\n\n", help.code, help.usageSuffix))
 	}
@@ -98,5 +97,48 @@ func (hp *Command) Help() helpInfo {
 		usageSuffix:  "[subcommand] [...parameters]",
 		childrenName: "subcommands",
 		children:     children,
+	}
+}
+
+func (hp *ChildCommand) Help() helpInfo {
+	var description string
+	if len(hp.aliases) <= 0 {
+		description = hp.description
+	} else {
+		description = fmt.Sprintf("%v. Alternatives: %v", hp.description, strings.Join(hp.aliases, ", "))
+	}
+
+	children := make([]helpInfo, len(hp.parameters))
+	for k, v := range hp.parameters {
+		children[k] = v.Help()
+	}
+
+	return helpInfo{
+		code:         hp.code,
+		description:  description,
+		usageSuffix:  "[...parameters]",
+		childrenName: "parameters",
+		children:     children,
+	}
+}
+
+func (hp *Parameter) Help() helpInfo {
+	var description strings.Builder
+
+	if hp.isFlag {
+		description.WriteString(fmt.Sprintf("%v. Flag", hp.description))
+	} else {
+		description.WriteString(hp.description)
+	}
+
+	if hp.isOptional {
+		description.WriteString(" (optional)")
+	} else {
+		description.WriteString(" (required)")
+	}
+
+	return helpInfo{
+		code: fmt.Sprintf("--%v", hp.code),
+		description: description.String(),
 	}
 }

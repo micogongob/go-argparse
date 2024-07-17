@@ -10,7 +10,21 @@ type Command struct {
 	code        string
 	description string
 	aliases     []string
-	children    []Command
+	children    []ChildCommand
+}
+
+type ChildCommand struct {
+	code        string
+	description string
+	aliases     []string
+	parameters  []Parameter
+}
+
+type Parameter struct {
+	code        string
+	description string
+	isOptional  bool
+	isFlag      bool
 }
 
 type helpInfo struct {

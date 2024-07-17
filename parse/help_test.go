@@ -8,7 +8,10 @@ var TestApp App
 
 func init() {
 	sssCommand := NewCommand(SSS_CODE, "SSS Queue Operations")
-	sssCommand.AddChildrenCommand("list-queues", "Lists SSS queues")
+	sssCommand.AddChildrenCommand("list-queues", "Lists SSS queues",
+		NewParameter("queue-name", "the name of SSS queue", false, false),
+		NewParameter("page-size", "pagination", true, false),
+		NewParameter("debug", "DEBUG logging", true, true))
 	sssCommand.AddChildrenCommand("send-message", "Send string message to SSS queue")
 
 	s4Command := NewCommand(S4_CODE, "S4 Bucket Operations")
@@ -27,6 +30,7 @@ func TestAppHelp(t *testing.T) {
 			args = []string{HelpCommandAliases[i]}
 		}
 
+		t.Logf("Args: %v", args)
 		parsedOutput, err := TestApp.parseStrings(args)
 
 		actual := parsedOutput.helpMessage
@@ -59,6 +63,7 @@ func TestSssHelp(t *testing.T) {
 			args = []string{SSS_CODE, HelpCommandAliases[i]}
 		}
 
+		t.Logf("Args: %v", args)
 		parsedOutput, err := TestApp.parseStrings(args)
 
 		actual := parsedOutput.helpMessage
@@ -91,6 +96,7 @@ func TestS4Help(t *testing.T) {
 			args = []string{S4_CODE, HelpCommandAliases[i]}
 		}
 
+		t.Logf("Args: %v", args)
 		parsedOutput, err := TestApp.parseStrings(args)
 
 		actual := parsedOutput.helpMessage
@@ -114,35 +120,35 @@ func TestS4Help(t *testing.T) {
 	}
 }
 
-// func TestSssListQueuesHelp(t *testing.T) {
-// 	for i := 0; i <= len(HelpCommandAliases); i++ {
-// 		var args []string
-// 		if i == len(HelpCommandAliases) {
-// 			args = []string{S4_CODE, "list-queues"}
-// 		} else {
-// 			args = []string{S4_CODE, "list-queues", HelpCommandAliases[i]}
-// 		}
+func TestSssListQueuesHelp(t *testing.T) {
+	for i := 0; i <= len(HelpCommandAliases); i++ {
+		var args []string
+		if i == len(HelpCommandAliases) {
+			args = []string{SSS_CODE, "list-queues"}
+		} else {
+			args = []string{SSS_CODE, "list-queues", HelpCommandAliases[i]}
+		}
 
-// 		parsedOutput, err := TestApp.parseStrings(args)
+		t.Logf("Args: %v", args)
+		parsedOutput, err := TestApp.parseStrings(args)
 
-// 		actual := parsedOutput.helpMessage
+		actual := parsedOutput.helpMessage
 
-// 		if err != nil {
-// 			t.Errorf("Unexpected error. %v", err)
-// 		}
+		if err != nil {
+			t.Errorf("Unexpected error. %v", err)
+		}
 
-// 		expected := `SSSS Queue Operations
+		expected := `Lists SSS queues
 
-//   usage: list-queues [.parameters]
+  usage: list-queues [...parameters]
 
-//   parameters:
-//     --queue-name - the name of SSS queue
-//     --page-size - pagination
-// 	--debug - DEBUG logging
-//     help - Show help. Alternatives: --help, -h
-// `
-// 		if actual != expected {
-// 			t.Errorf("index: %v - \nactual:\n%v\nexpected:\n%v", i, actual, expected)
-// 		}
-// 	}
-// }
+  parameters:
+    --queue-name -> the name of SSS queue (required)
+    --page-size  -> pagination (optional)
+    --debug      -> DEBUG logging. Flag (optional)
+`
+		if actual != expected {
+			t.Errorf("index: %v - \nactual:\n%v\nexpected:\n%v", i, actual, expected)
+		}
+	}
+}

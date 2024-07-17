@@ -1,22 +1,19 @@
 package parse
 
-import (
-	"os"
-)
 
-func arguments() []string {
-	if len(os.Args) <= 0 {
+func tail(source []string) []string {
+	if len(source) <= 0 {
 		return []string{}
 	}
-	return os.Args[1:len(os.Args)]
+	return source[1:]
 }
 
-func (c *Command) matches(argValue string) bool {
-	if argValue == c.code {
+func commandMatchesArg(code string, aliases []string, argValue string) bool {
+	if argValue == code {
 		return true
 	}
 
-	for _, alias := range c.aliases {
+	for _, alias := range aliases {
 		if argValue == alias {
 			return true
 		}
