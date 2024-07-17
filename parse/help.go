@@ -5,6 +5,12 @@ import (
 	"strings"
 )
 
+var HelpCommand = Command{
+	code:        "help",
+	description: "Show help",
+	aliases:     []string{"--help", "-h"},
+}
+
 func helpToString(help helpInfo) string {
 	var sb strings.Builder
 
@@ -20,7 +26,7 @@ func helpToString(help helpInfo) string {
 	return sb.String()
 }
 
-func (hp *app) Help() helpInfo {
+func (hp *App) Help() helpInfo {
 	children := make([]helpInfo, len(hp.commands))
 
 	for k, v := range hp.commands {
@@ -38,13 +44,13 @@ func (hp *app) Help() helpInfo {
 
 func (hp *Command) Help() helpInfo {
 	var description string
-	if len(hp.Aliases) <= 0 {
-		description = hp.Description
+	if len(hp.aliases) <= 0 {
+		description = hp.description
 	} else {
-		description = fmt.Sprintf("%v. Alternatives: %v", hp.Description, strings.Join(hp.Aliases, ", "))
+		description = fmt.Sprintf("%v. Alternatives: %v", hp.description, strings.Join(hp.aliases, ", "))
 	}
 	return helpInfo{
-		code:        hp.Code,
+		code:        hp.code,
 		description: description,
 	}
 }

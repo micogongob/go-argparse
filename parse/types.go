@@ -1,16 +1,16 @@
 package parse
 
-type app struct {
+type App struct {
 	code        string
 	description string
 	commands    []Command
 }
 
 type Command struct {
-	Code        string
-	Description string
-	Aliases     []string
-	Children    []Command
+	code        string
+	description string
+	aliases     []string
+	children    []Command
 }
 
 type helpInfo struct {
@@ -21,6 +21,6 @@ type helpInfo struct {
 	children     []helpInfo
 }
 
-type ParseOutput struct {
-	HelpMessage string
+type parseOutput struct {
+	helpMessage string
 }

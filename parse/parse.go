@@ -1,37 +1,29 @@
 package parse
 
-var App = app{}
+import (
+	"fmt"
+	"os"
+)
 
-var HelpCommand = Command{
-	Code:        "help",
-	Description: "Show help",
-	Aliases:     []string{"--help", "-h"},
+func (app *App) Parse() {
+	out, err := app.parseStrings(arguments())
+
+	if err != nil {
+		os.Exit(1)
+	}
+
+	if out.helpMessage != "" {
+		fmt.Println(out.helpMessage)
+	}
 }
 
-func init() {
-	App.commands = append(App.commands, HelpCommand)
-}
-
-func Setup(code, description string) {
-	App.code = code
-	App.description = description
-}
-
-func AddCommand(command Command) {
-	App.commands = append(App.commands, command)
-}
-
-func Parse() (ParseOutput, error) {
-	return ParseStrings(arguments())
-}
-
-func ParseStrings(args []string) (ParseOutput, error) {
+func (app *App) parseStrings(args []string) (parseOutput, error) {
 	if len(args) > 0 {
-		for _, command := range App.commands {
+		for _, command := range app.commands {
 			if command.matches(args[0]) {
-				if command.Code == HelpCommand.Code {
-					return ParseOutput{
-						HelpMessage: helpToString(App.Help()),
+				if command.code == HelpCommand.code {
+					return parseOutput{
+						helpMessage: helpToString(app.Help()),
 					}, nil
 				} else {
 					// TODO handle callback
@@ -40,17 +32,17 @@ func ParseStrings(args []string) (ParseOutput, error) {
 		}
 	}
 
-	return ParseOutput{
-		HelpMessage: helpToString(App.Help()),
+	return parseOutput{
+		helpMessage: helpToString(app.Help()),
 	}, nil
 }
 
 func (c *Command) matches(argValue string) bool {
-	if argValue == c.Code {
+	if argValue == c.code {
 		return true
 	}
 
-	for _, alias := range c.Aliases {
+	for _, alias := range c.aliases {
 		if argValue == alias {
 			return true
 		}

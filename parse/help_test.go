@@ -1,16 +1,14 @@
-package tests
+package parse
 
 import (
-	"github.com/micogongob/go-argparse/parse"
 	"testing"
 )
 
-var HelpCommandAliases = []string{"help", "--help", "-h"}
+var TestApp = NewApp(APP_CODE, APP_DESC)
 
 func init() {
-	parse.Setup(AppCode, AppDesc)
-	parse.AddCommand(SssCommand)
-	parse.AddCommand(S4Command)
+	TestApp.AddCommand(SSS_CODE, "SSS Operations", []string{}, []Command{})
+	TestApp.AddCommand(S4_CODE, "S4 Operations", []string{}, []Command{})
 }
 
 func TestAppHelp(t *testing.T) {
@@ -22,9 +20,9 @@ func TestAppHelp(t *testing.T) {
 			args = []string{HelpCommandAliases[i]}
 		}
 
-		parsedOutput, err := parse.ParseStrings(args)
+		parsedOutput, err := TestApp.parseStrings(args)
 
-		actual := parsedOutput.HelpMessage
+		actual := parsedOutput.helpMessage
 
 		if err != nil {
 			t.Errorf("Unexpected error. %v", err)
