@@ -74,6 +74,7 @@ func TestSssHelp(t *testing.T) {
   subcommands:
     list-queues - Lists SSS queues
     send-message - Send string message to SSS queue
+    help - Show help. Alternatives: --help, -h
 `
 		if actual != expected {
 			t.Errorf("index: %v - \nactual:\n%v\nexpected:\n%v", i, actual, expected)
@@ -105,6 +106,7 @@ func TestS4Help(t *testing.T) {
   subcommands:
     make-bucket - Create S4 bucket
     copy-objects - Copies object between s4 buckets
+    help - Show help. Alternatives: --help, -h
 `
 		if actual != expected {
 			t.Errorf("index: %v - \nactual:\n%v\nexpected:\n%v", i, actual, expected)
