@@ -10,3 +10,17 @@ func arguments() []string {
 	}
 	return os.Args[1:len(os.Args)]
 }
+
+func (c *Command) matches(argValue string) bool {
+	if argValue == c.code {
+		return true
+	}
+
+	for _, alias := range c.aliases {
+		if argValue == alias {
+			return true
+		}
+	}
+
+	return false
+}
