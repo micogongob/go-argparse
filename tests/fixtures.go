@@ -5,16 +5,16 @@ import (
 )
 
 var (
-	APP_CODE = "ows"
-	APP_DESC = "Owsome cli"
+	AppCode = "ows"
+	AppDesc = "Owsome cli"
 )
 
 var (
-	SSS_COMMAND = parse.Command{
+	SssCommand = parse.Command{
 		Code:        "sss",
 		Description: "SSS Operations",
 	}
-	S4_COMMAND = parse.Command{
+	S4Command = parse.Command{
 		Code:        "s4",
 		Description: "S4 Operations",
 	}

@@ -20,3 +20,7 @@ type helpInfo struct {
 	childrenName string
 	children     []helpInfo
 }
+
+type ParseOutput struct {
+	HelpMessage string
+}
