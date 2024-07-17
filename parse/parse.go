@@ -5,72 +5,44 @@ import (
 	"strings"
 )
 
-func NewApp(description string, commands []Command) App {
-	// for index, command := range commands {
-	// 	subCommandhelpCommand := SubCommand{
-	// 		Code:        "help",
-	// 		Triggers:    []string{"--help", "-h"},
-	// 		Description: "Show Help",
-	// 	}
-	// 	commands[index].helpCommand = subCommandhelpCommand
-	// 	commands[index].SubCommands = append(command.SubCommands, subCommandhelpCommand)
-	// }
-	appHelpCommand := Command{
-		Code:        "help",
-		Triggers:    []string{"--help", "-h"},
-		Description: "Show Help",
-	}
+var APP = app{}
 
-	app := App{
-		Description: description,
-		Commands:    append(commands, appHelpCommand),
-		HelpCommand: appHelpCommand,
-	}
+func init() {
 
-	appHelpCommand.OnCommand = func(paramValues map[string]string) error {
-		return nil
-	}
-
-	return app
 }
 
-func (app *App) Parse() (string, error) {
-	return app.ParseStrings(arguments())
+func Setup(code, description string) {
+	APP.code = code
+	APP.description = description
 }
 
-func (app *App) ParseStrings(args []string) (string, error) {
+func AddCommand(command Command) {
+	APP.commands = append(APP.commands, command)
+}
+
+func Parse() (string, error) {
+	return ParseStrings(arguments())
+}
+
+func ParseStrings(args []string) (string, error) {
 	if len(args) > 0 {
 		return "", nil
 	} else {
-		return helpInfoToString(app.helpInfo()), nil
-		// } else if argMatches(args, 0, app.helpCommand.Code, app.helpCommand.Triggers) {
-		// 	return showHelp(&app.HelpCommand)
-		// } else {
-		// 	isCommandMatched := false
-
-		// 	for _, command := range app.Commands {
-		// 		if argMatches(args, 0, command.Code, command.Triggers) {
-		// 			return &command
-		// 		}
-		// 	}
-
-		// 	if !isCommandMatched {
-		// 		return showHelp(&app.HelpCommand)
-		// 	}
+		return helpToString(APP.Help()), nil
 	}
 }
 
-func helpInfoToString(help HelpInfo) string {
+func helpToString(help helpInfo) string {
 	var sb strings.Builder
 
-	sb.WriteString(fmt.Sprintf("%v\n", help.description))
-	for _, subHelp := range help.subHelpInfo {
-		code := subHelp.code
-		if code == nil {
-			sb.WriteString(fmt.Sprintf("%v\n", helpInfoToString(subHelp)))
-		}
-		// TODO format
-		sb.WriteString(fmt.Sprintf("   %v - %v\n", code, subHelp.description))
+	sb.WriteString(fmt.Sprintf("  %v\n\n", help.description))
+	// TODO format
+	sb.WriteString(fmt.Sprintf("  usage: %v %v\n\n", help.code, help.usageSuffix))
+
+	sb.WriteString(fmt.Sprintf("  %v:\n", help.childrenName))
+	for _, child := range help.children {
+		sb.WriteString(fmt.Sprintf("    %v - %v\n", child.code, child.description))
 	}
+
 	return sb.String()
 }
