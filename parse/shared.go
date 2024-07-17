@@ -1,6 +1,5 @@
 package parse
 
-
 func tail(source []string) []string {
 	if len(source) <= 0 {
 		return []string{}

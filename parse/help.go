@@ -138,7 +138,7 @@ func (hp *Parameter) Help() helpInfo {
 	}
 
 	return helpInfo{
-		code: fmt.Sprintf("--%v", hp.code),
+		code:        fmt.Sprintf("--%v", hp.code),
 		description: description.String(),
 	}
 }

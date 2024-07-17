@@ -1,6 +1,5 @@
 package parse
 
-
 func NewCommand(code, description string) *Command {
 	return &Command{
 		code:        code,
@@ -9,7 +8,7 @@ func NewCommand(code, description string) *Command {
 	}
 }
 
-func (command *Command) AddChildrenCommand(code, description string, parameters ...Parameter) {
+func (command *Command) AddChildCommand(code, description string, parameters ...Parameter) {
 	childCommand := &ChildCommand{
 		code:        code,
 		description: description,
@@ -18,12 +17,12 @@ func (command *Command) AddChildrenCommand(code, description string, parameters 
 	command.children = append(command.children, *childCommand)
 }
 
-func NewParameter(code, description string, isOptional, isFlag bool) Parameter {
+func NewCommandParameter(code, description string, isOptional, isFlag bool) Parameter {
 	return Parameter{
-		code: code,
+		code:        code,
 		description: description,
-		isOptional: isOptional,
-		isFlag: isFlag,
+		isOptional:  isOptional,
+		isFlag:      isFlag,
 	}
 }
 

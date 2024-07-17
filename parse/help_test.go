@@ -8,15 +8,15 @@ var TestApp App
 
 func init() {
 	sssCommand := NewCommand(SSS_CODE, "SSS Queue Operations")
-	sssCommand.AddChildrenCommand("list-queues", "Lists SSS queues",
-		NewParameter("queue-name", "the name of SSS queue", false, false),
-		NewParameter("page-size", "pagination", true, false),
-		NewParameter("debug", "DEBUG logging", true, true))
-	sssCommand.AddChildrenCommand("send-message", "Send string message to SSS queue")
+	sssCommand.AddChildCommand("list-queues", "Lists SSS queues",
+		NewCommandParameter("queue-name", "the name of SSS queue", false, false),
+		NewCommandParameter("page-size", "pagination", true, false),
+		NewCommandParameter("debug", "DEBUG logging", true, true))
+	sssCommand.AddChildCommand("send-message", "Send string message to SSS queue")
 
 	s4Command := NewCommand(S4_CODE, "S4 Bucket Operations")
-	s4Command.AddChildrenCommand("make-bucket", "Create S4 bucket")
-	s4Command.AddChildrenCommand("copy-objects", "Copies object between s4 buckets")
+	s4Command.AddChildCommand("make-bucket", "Create S4 bucket")
+	s4Command.AddChildCommand("copy-objects", "Copies object between s4 buckets")
 
 	TestApp = NewApp(APP_CODE, APP_DESC, sssCommand, s4Command)
 }
