@@ -21,10 +21,10 @@ func (command *Command) AddChildCommand(input AddChildCommandInput) {
 
 func NewCommandParameter(input NewCommandParameterInput) Parameter {
 	return Parameter{
-		code: input.Code,
+		code:        input.Code,
 		description: input.Description,
-		isOptional: input.IsOptional,
-		isFlag: input.IsFlag,
+		isOptional:  input.IsOptional,
+		isFlag:      input.IsFlag,
 	}
 }
 

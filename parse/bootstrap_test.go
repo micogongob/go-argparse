@@ -2,7 +2,6 @@ package parse
 
 import "testing"
 
-
 func TestCodesInvalidInput(t *testing.T) {
 
 }
@@ -14,24 +13,24 @@ func TestDuplicateCodes(t *testing.T) {
 func TestRequiredParameterButFlag(t *testing.T) {
 	// given
 	command := NewCommand(NewCommandInput{
-		Code: "test",
+		Code:        "test",
 		Description: "Test Me",
 	})
 	command.AddChildCommand(AddChildCommandInput{
-		Code: "file-name",
+		Code:        "file-name",
 		Description: "Name of file to test",
 		Parameters: []Parameter{
 			NewCommandParameter(NewCommandParameterInput{
-				Code: "verbose",
+				Code:        "verbose",
 				Description: "Toggle verbose logging",
-				IsFlag: true,
+				IsFlag:      true,
 			}),
 		},
 	})
-	
+
 	// when
 	_, err := NewApp(NewAppInput{
-		Code: "tester",
+		Code:        "tester",
 		Description: "Tester App",
 		Commands: []*Command{
 			command,
@@ -45,13 +44,13 @@ func TestRequiredParameterButFlag(t *testing.T) {
 func TestCommandWithoutChildCommand(t *testing.T) {
 	// given
 	command := NewCommand(NewCommandInput{
-		Code: "test",
+		Code:        "test",
 		Description: "Test Me",
 	})
 
 	// when
 	_, err := NewApp(NewAppInput{
-		Code: "tester",
+		Code:        "tester",
 		Description: "Tester App",
 		Commands: []*Command{
 			command,

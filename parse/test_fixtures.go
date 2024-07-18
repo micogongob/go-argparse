@@ -13,52 +13,56 @@ var HelpCommandAliases = []string{"help", "--help", "-h"}
 
 func newTestApp(t *testing.T) App {
 	sssCommand := NewCommand(NewCommandInput{
-		Code: SSS_CODE,
+		Code:        SSS_CODE,
 		Description: "SSS Queue Operations",
 	})
 	sssCommand.AddChildCommand(AddChildCommandInput{
-		Code: "list-queues",
+		Code:        "version",
+		Description: "Show SSS version",
+	})
+	sssCommand.AddChildCommand(AddChildCommandInput{
+		Code:        "list-queues",
 		Description: "Lists SSS queues",
 		Parameters: []Parameter{
 			NewCommandParameter(NewCommandParameterInput{
-				Code: "page-size",
+				Code:        "page-size",
 				Description: "pagination",
-				IsOptional: true,
+				IsOptional:  true,
 			}),
 			NewCommandParameter(NewCommandParameterInput{
-				Code: "debug",
+				Code:        "debug",
 				Description: "DEBUG logging",
-				IsOptional: true,
-				IsFlag: true,
+				IsOptional:  true,
+				IsFlag:      true,
 			}),
 		},
 	})
 	sssCommand.AddChildCommand(AddChildCommandInput{
-		Code: "send-message",
+		Code:        "send-message",
 		Description: "Send string message to SSS queue",
-		Parameters: []Parameter {
+		Parameters: []Parameter{
 			NewCommandParameter(NewCommandParameterInput{
-				Code: "queue-name",
+				Code:        "queue-name",
 				Description: "the name of the SSS queue",
 			}),
 		},
 	})
 
 	s4Command := NewCommand(NewCommandInput{
-		Code: S4_CODE,
+		Code:        S4_CODE,
 		Description: "S4 Bucket Operations",
 	})
 	s4Command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
+		Code:        "make-bucket",
 		Description: "Create S4 bucket",
 	})
 	s4Command.AddChildCommand(AddChildCommandInput{
-		Code: "copy-objects",
+		Code:        "copy-objects",
 		Description: "Copies object between s4 buckets",
 	})
 
 	app, err := NewApp(NewAppInput{
-		Code: APP_CODE,
+		Code:        APP_CODE,
 		Description: APP_DESC,
 		Commands: []*Command{
 			sssCommand,
@@ -71,7 +75,7 @@ func newTestApp(t *testing.T) App {
 
 func assertError(t *testing.T, err error, message string) {
 	if err == nil {
-		t.Error("Error did not happen")
+		t.Errorf("Error did not happen: %v", message)
 	} else {
 		assertStringEquals(t, err.Error(), message)
 	}

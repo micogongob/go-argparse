@@ -55,6 +55,7 @@ func TestSssHelp(t *testing.T) {
   usage: sss [subcommand] [...parameters]
 
   subcommands:
+    version      -> Show SSS version
     list-queues  -> Lists SSS queues
     send-message -> Send string message to SSS queue
     help         -> Show help. Alternatives: --help, -h
@@ -87,6 +88,26 @@ func TestS4Help(t *testing.T) {
     make-bucket  -> Create S4 bucket
     copy-objects -> Copies object between s4 buckets
     help         -> Show help. Alternatives: --help, -h
+`)
+	}
+}
+
+func TestSssVersionHelp(t *testing.T) {
+	// given
+	testApp := newTestApp(t)
+
+	for i := 0; i < len(HelpCommandAliases); i++ {
+		args := []string{SSS_CODE, "version", HelpCommandAliases[i]}
+		t.Logf("Args: %v", args)
+
+		// when
+		parsedOutput, err := testApp.parseStrings(args)
+
+		// then
+		assertNilError(t, err)
+		assertStringEquals(t, parsedOutput.helpMessage, `Show SSS version
+
+  usage: version
 `)
 	}
 }

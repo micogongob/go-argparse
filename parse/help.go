@@ -21,11 +21,15 @@ func helpToString(help helpInfo) string {
 	var sb strings.Builder
 
 	sb.WriteString(fmt.Sprintf("%v\n\n", help.description))
-	if help.usageSuffix != "" {
-		sb.WriteString(fmt.Sprintf("  usage: %v %v\n\n", help.code, help.usageSuffix))
+	if len(help.children) > 0 {
+		if help.usageSuffix != "" {
+			sb.WriteString(fmt.Sprintf("  usage: %v %v\n\n", help.code, help.usageSuffix))
+		}
+	} else {
+		sb.WriteString(fmt.Sprintf("  usage: %v\n", help.code))
 	}
 
-	if help.childrenName != "" {
+	if len(help.children) > 0 && help.childrenName != "" {
 		sb.WriteString(fmt.Sprintf("  %v:\n", help.childrenName))
 	}
 

@@ -40,25 +40,25 @@ type parseOutput struct {
 }
 
 type NewCommandInput struct {
-	Code string
+	Code        string
 	Description string
 }
 
 type AddChildCommandInput struct {
-	Code string
+	Code        string
 	Description string
-	Parameters []Parameter
+	Parameters  []Parameter
 }
 
 type NewCommandParameterInput struct {
-	Code string
+	Code        string
 	Description string
-	IsOptional bool
-	IsFlag bool
+	IsOptional  bool
+	IsFlag      bool
 }
 
 type NewAppInput struct {
-	Code string
+	Code        string
 	Description string
-	Commands []*Command
+	Commands    []*Command
 }
