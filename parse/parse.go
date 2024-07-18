@@ -59,15 +59,15 @@ func (command *Command) parseStrings(args []string) (parseOutput, error) {
 
 func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 	if len(args) > 0 {
+		// NOTE: outlier since parameter does not have help
+		if commandMatchesArg(HelpCommand.code, HelpCommand.aliases, args[0]) {
+			return parseOutput{
+				helpMessage: helpToString(command.Help()),
+			}, nil
+		}
 		for _, parameter := range command.parameters {
 			if commandMatchesArg(parameter.code, []string{}, args[0]) {
-				if parameter.code == HelpChildCommand.code {
-					return parseOutput{
-						helpMessage: helpToString(command.Help()),
-					}, nil
-				} else {
-					// TODO handle callback or callback
-				}
+				// TODO handle callback or callback
 			}
 		}
 	}
