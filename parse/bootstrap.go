@@ -1,5 +1,7 @@
 package parse
 
+import "fmt"
+
 func NewCommand(input NewCommandInput) *Command {
 	return &Command{
 		code:        input.Code,
@@ -30,6 +32,17 @@ func NewApp(input NewAppInput) (App, error) {
 	appCommands := []Command{}
 
 	for _, command := range input.Commands {
+		if len(command.children) <= 0 {
+			return App{}, fmt.Errorf("invalid command setup: %v should have atleast one child command", command.code)
+		}
+		for _, childCommand := range command.children {
+			for _, parameter := range childCommand.parameters {
+				if !parameter.isOptional && parameter.isFlag {
+					return App{}, fmt.Errorf("invalid parameter setup: %v cannot be required and a flag at the same time", parameter.code)
+				}
+			}
+		}
+
 		command.children = append(command.children, HelpChildCommand)
 		appCommands = append(appCommands, *command)
 	}
