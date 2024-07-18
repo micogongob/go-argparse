@@ -14,10 +14,10 @@ var HelpCommandAliases = []string{"help", "--help", "-h"}
 func newTestApp() App {
 	sssCommand := NewCommand(SSS_CODE, "SSS Queue Operations")
 	sssCommand.AddChildCommand("list-queues", "Lists SSS queues",
-		NewCommandParameter("region", "the region of the SSS queues", false, false),
 		NewCommandParameter("page-size", "pagination", true, false),
 		NewCommandParameter("debug", "DEBUG logging", true, true))
-	sssCommand.AddChildCommand("send-message", "Send string message to SSS queue")
+	sssCommand.AddChildCommand("send-message", "Send string message to SSS queue",
+		NewCommandParameter("queue-name", "the name of the SSS queue", false, false))
 
 	s4Command := NewCommand(S4_CODE, "S4 Bucket Operations")
 	s4Command.AddChildCommand("make-bucket", "Create S4 bucket")
@@ -26,7 +26,15 @@ func newTestApp() App {
 	return NewApp(APP_CODE, APP_DESC, sssCommand, s4Command)
 }
 
-func assertNonNil(t *testing.T, err error) {
+func assertError(t *testing.T, err error, message string) {
+	if err == nil {
+		t.Error("Error did not happen")
+	} else {
+		assertStringEquals(t, err.Error(), message)
+	}
+}
+
+func assertNilError(t *testing.T, err error) {
 	if err != nil {
 		t.Errorf("Unexpected error encountered: %v", err)
 	}
