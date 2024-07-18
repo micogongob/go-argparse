@@ -1,5 +1,7 @@
 package parse
 
+import "regexp"
+
 func tail(source []string) []string {
 	if len(source) <= 0 {
 		return []string{}
@@ -19,4 +21,12 @@ func commandMatchesArg(code string, aliases []string, argValue string) bool {
 	}
 
 	return false
+}
+
+func matchesRegex(doNotTrust, pattern string) bool {
+	r, err := regexp.Compile(pattern)
+	if err != nil {
+		return false
+	}
+	return r.MatchString(doNotTrust)
 }
