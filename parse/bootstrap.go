@@ -1,43 +1,42 @@
 package parse
 
-
-func NewCommand(code, description string) *Command {
+func NewCommand(input NewCommandInput) *Command {
 	return &Command{
-		code:        code,
-		description: description,
+		code:        input.Code,
+		description: input.Description,
 		aliases:     []string{}, // TODO don't support aliases outside for now
 	}
 }
 
-func (command *Command) AddChildCommand(code, description string, parameters ...Parameter) {
+func (command *Command) AddChildCommand(input AddChildCommandInput) {
 	childCommand := &ChildCommand{
-		code:        code,
-		description: description,
-		parameters:  parameters,
+		code:        input.Code,
+		description: input.Description,
+		parameters:  input.Parameters,
 	}
 	command.children = append(command.children, *childCommand)
 }
 
-func NewCommandParameter(code, description string, isOptional, isFlag bool) Parameter {
+func NewCommandParameter(input NewCommandParameterInput) Parameter {
 	return Parameter{
-		code: code,
-		description: description,
-		isOptional: isOptional,
-		isFlag: isFlag,
+		code: input.Code,
+		description: input.Description,
+		isOptional: input.IsOptional,
+		isFlag: input.IsFlag,
 	}
 }
 
-func NewApp(code, description string, commands ...*Command) (App, error) {
+func NewApp(input NewAppInput) (App, error) {
 	appCommands := []Command{}
 
-	for _, command := range commands {
+	for _, command := range input.Commands {
 		command.children = append(command.children, HelpChildCommand)
 		appCommands = append(appCommands, *command)
 	}
 
 	return App{
-		code:        code,
-		description: description,
+		code:        input.Code,
+		description: input.Description,
 		commands:    append(appCommands, HelpCommand),
 	}, nil
 }

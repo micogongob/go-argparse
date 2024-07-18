@@ -12,18 +12,59 @@ const (
 var HelpCommandAliases = []string{"help", "--help", "-h"}
 
 func newTestApp(t *testing.T) App {
-	sssCommand := NewCommand(SSS_CODE, "SSS Queue Operations")
-	sssCommand.AddChildCommand("list-queues", "Lists SSS queues",
-		NewCommandParameter("page-size", "pagination", true, false),
-		NewCommandParameter("debug", "DEBUG logging", true, true))
-	sssCommand.AddChildCommand("send-message", "Send string message to SSS queue",
-		NewCommandParameter("queue-name", "the name of the SSS queue", false, false))
+	sssCommand := NewCommand(NewCommandInput{
+		Code: SSS_CODE,
+		Description: "SSS Queue Operations",
+	})
+	sssCommand.AddChildCommand(AddChildCommandInput{
+		Code: "list-queues",
+		Description: "Lists SSS queues",
+		Parameters: []Parameter{
+			NewCommandParameter(NewCommandParameterInput{
+				Code: "page-size",
+				Description: "pagination",
+				IsOptional: true,
+			}),
+			NewCommandParameter(NewCommandParameterInput{
+				Code: "debug",
+				Description: "DEBUG logging",
+				IsOptional: true,
+				IsFlag: true,
+			}),
+		},
+	})
+	sssCommand.AddChildCommand(AddChildCommandInput{
+		Code: "send-message",
+		Description: "Send string message to SSS queue",
+		Parameters: []Parameter {
+			NewCommandParameter(NewCommandParameterInput{
+				Code: "queue-name",
+				Description: "the name of the SSS queue",
+			}),
+		},
+	})
 
-	s4Command := NewCommand(S4_CODE, "S4 Bucket Operations")
-	s4Command.AddChildCommand("make-bucket", "Create S4 bucket")
-	s4Command.AddChildCommand("copy-objects", "Copies object between s4 buckets")
+	s4Command := NewCommand(NewCommandInput{
+		Code: S4_CODE,
+		Description: "S4 Bucket Operations",
+	})
+	s4Command.AddChildCommand(AddChildCommandInput{
+		Code: "make-bucket",
+		Description: "Create S4 bucket",
+	})
+	s4Command.AddChildCommand(AddChildCommandInput{
+		Code: "copy-objects",
+		Description: "Copies object between s4 buckets",
+	})
 
-	app, err := NewApp(APP_CODE, APP_DESC, sssCommand, s4Command)
+	app, err := NewApp(NewAppInput{
+		Code: APP_CODE,
+		Description: APP_DESC,
+		Commands: []*Command{
+			sssCommand,
+			s4Command,
+		},
+	})
 	assertNilError(t, err)
 	return app
 }

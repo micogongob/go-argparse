@@ -38,3 +38,27 @@ type helpInfo struct {
 type parseOutput struct {
 	helpMessage string
 }
+
+type NewCommandInput struct {
+	Code string
+	Description string
+}
+
+type AddChildCommandInput struct {
+	Code string
+	Description string
+	Parameters []Parameter
+}
+
+type NewCommandParameterInput struct {
+	Code string
+	Description string
+	IsOptional bool
+	IsFlag bool
+}
+
+type NewAppInput struct {
+	Code string
+	Description string
+	Commands []*Command
+}
