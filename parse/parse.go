@@ -72,7 +72,11 @@ func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 		}
 	}
 
-	return parseOutput{
-		helpMessage: helpToString(command.Help()),
-	}, nil
+	requiredParameters := command.requiredParameters()
+	if len(requiredParameters) > 0 {
+		return parseOutput{}, fmt.Errorf("missing required parameter/s: %v", parametersListToHelp(requiredParameters))
+	}
+
+	// TODO invoke child command function, maybe add validation in bootstrap?
+	return parseOutput{}, nil
 }

@@ -11,7 +11,7 @@ const (
 
 var HelpCommandAliases = []string{"help", "--help", "-h"}
 
-func newTestApp() App {
+func newTestApp(t *testing.T) App {
 	sssCommand := NewCommand(SSS_CODE, "SSS Queue Operations")
 	sssCommand.AddChildCommand("list-queues", "Lists SSS queues",
 		NewCommandParameter("page-size", "pagination", true, false),
@@ -23,7 +23,9 @@ func newTestApp() App {
 	s4Command.AddChildCommand("make-bucket", "Create S4 bucket")
 	s4Command.AddChildCommand("copy-objects", "Copies object between s4 buckets")
 
-	return NewApp(APP_CODE, APP_DESC, sssCommand, s4Command)
+	app, err := NewApp(APP_CODE, APP_DESC, sssCommand, s4Command)
+	assertNilError(t, err)
+	return app
 }
 
 func assertError(t *testing.T, err error, message string) {

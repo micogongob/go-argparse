@@ -4,7 +4,7 @@ import "testing"
 
 func TestAppHelp(t *testing.T) {
 	// given
-	testApp := newTestApp()
+	testApp := newTestApp(t)
 
 	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
@@ -34,7 +34,7 @@ func TestAppHelp(t *testing.T) {
 
 func TestSssHelp(t *testing.T) {
 	// given
-	testApp := newTestApp()
+	testApp := newTestApp(t)
 
 	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
@@ -64,7 +64,7 @@ func TestSssHelp(t *testing.T) {
 
 func TestS4Help(t *testing.T) {
 	// tiven
-	testApp := newTestApp()
+	testApp := newTestApp(t)
 
 	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
@@ -93,7 +93,7 @@ func TestS4Help(t *testing.T) {
 
 func TestSssListQueuesHelp(t *testing.T) {
 	// given
-	testApp := newTestApp()
+	testApp := newTestApp(t)
 
 	for i := 0; i < len(HelpCommandAliases); i++ {
 		args := []string{SSS_CODE, "list-queues", HelpCommandAliases[i]}
@@ -117,7 +117,7 @@ func TestSssListQueuesHelp(t *testing.T) {
 
 func TestSssSendMessageHelp(t *testing.T) {
 	// given
-	testApp := newTestApp()
+	testApp := newTestApp(t)
 
 	for i := 0; i < len(HelpCommandAliases); i++ {
 		args := []string{SSS_CODE, "send-message", HelpCommandAliases[i]}
