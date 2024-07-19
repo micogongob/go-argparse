@@ -77,10 +77,6 @@ func validateRequiredParameters(parameters []*Parameter, args []string) error {
 	return nil
 }
 
-func validateUnknownValues(parameters []*Parameter, args []string) error {
-	return fmt.Errorf("Unimplemented validation")
-}
-
 func filterParameterValues(parameters []*Parameter, args []string) (map[string]string, error) {
 	parameterValues := map[string]string{}
 
