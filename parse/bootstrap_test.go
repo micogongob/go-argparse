@@ -38,18 +38,21 @@ var ListsMaxSize = 101
 
 func TestCommandCodeNotProvided(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "s4",
-	})
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Children: []ChildCommand{
+					{
+						Code: "s4",
+					},
+				},
+			},
+		},
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid command setup: Code is not provided")
@@ -57,25 +60,27 @@ func TestCommandCodeNotProvided(t *testing.T) {
 
 func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: VeryLongLongCode,
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code: "bucket-name",
-			}),
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: VeryLongLongCode,
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+						Parameters: []Parameter{
+							{
+								Code: "bucket-name",
+							},
+						},
+					},
+				},
+			},
 		},
-	})
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, fmt.Sprintf("invalid command setup: \"%v...\" exceeds max size of 15", VeryLongLongCode[:15]))
@@ -83,26 +88,29 @@ func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 
 func TestCommandsAddedExceedMax(t *testing.T) {
 	// given
-	commands := make([]*Command, ListsMaxSize)
+	commands := make([]Command, ListsMaxSize)
 	for i := 0; i < len(commands); i++ {
-		commands[i] = NewCommand(NewCommandInput{
+		commands[i] = Command{
 			Code: fmt.Sprintf("s%d", i),
-		})
-		commands[i].AddChildCommand(AddChildCommandInput{
-			Code: "make-bucket",
-			Parameters: []Parameter{
-				NewCommandParameter(NewCommandParameterInput{
-					Code: "bucket-name",
-				}),
+			Children: []ChildCommand{
+				{
+					Code: "make-bucket",
+					Parameters: []Parameter{
+						{
+							Code: "bucket-name",
+						},
+					},
+				},
 			},
-		})
+		}
+	}
+	app := App{
+		Code:     "App",
+		Commands: commands,
 	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code:     "App",
-		Commands: commands,
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid command setup: commands added exceeds max size of 100")
@@ -111,25 +119,27 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 func TestCommandInvalidCodeInput(t *testing.T) {
 	for _, code := range InvalidCodes {
 		// given
-		command := NewCommand(NewCommandInput{
-			Code: code,
-		})
-		command.AddChildCommand(AddChildCommandInput{
-			Code: "make-bucket",
-			Parameters: []Parameter{
-				NewCommandParameter(NewCommandParameterInput{
-					Code: "bucket-name",
-				}),
+		app := App{
+			Code: "App",
+			Commands: []Command{
+				{
+					Code: code,
+					Children: []ChildCommand{
+						{
+							Code: "make-bucket",
+							Parameters: []Parameter{
+								{
+									Code: "bucket-name",
+								},
+							},
+						},
+					},
+				},
 			},
-		})
+		}
 
 		// when
-		_, err := NewApp(NewAppInput{
-			Code: "App",
-			Commands: []*Command{
-				command,
-			},
-		})
+		err := app.validate()
 
 		// then
 		assertError(t, err, fmt.Sprintf("invalid command setup: \"%v\" has invalid characters [A-Za-z0-9_-]", code))
@@ -138,27 +148,30 @@ func TestCommandInvalidCodeInput(t *testing.T) {
 
 func TestCommandDuplicateCode(t *testing.T) {
 	// given
-	command0 := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command0.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-	})
-	command1 := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command1.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-	})
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+					},
+				},
+			},
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+					},
+				},
+			},
+		},
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command0,
-			command1,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid command setup: \"s4\" is provided more than once")
@@ -166,18 +179,20 @@ func TestCommandDuplicateCode(t *testing.T) {
 
 func TestChildCommandCodeNotProvided(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{})
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{},
+				},
+			},
+		},
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid child command setup: \"s4.childCommands[*].Code\" is not provided")
@@ -185,25 +200,27 @@ func TestChildCommandCodeNotProvided(t *testing.T) {
 
 func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: VeryLongLongCode,
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code: "bucket-name",
-			}),
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: VeryLongLongCode,
+						Parameters: []Parameter{
+							{
+								Code: "bucket-name",
+							},
+						},
+					},
+				},
+			},
 		},
-	})
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, fmt.Sprintf("invalid child command setup: \"s4.%v...\" exceeds max size of 15", VeryLongLongCode[:15]))
@@ -211,27 +228,29 @@ func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 
 func TestChildCommandsAddedExceedMax(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
+	children := make([]ChildCommand, ListsMaxSize)
 	for i := 0; i < ListsMaxSize; i++ {
-		command.AddChildCommand(AddChildCommandInput{
+		children[i] = ChildCommand{
 			Code: fmt.Sprintf("make-bucket-v%d", i),
 			Parameters: []Parameter{
-				NewCommandParameter(NewCommandParameterInput{
+				{
 					Code: "bucket-name",
-				}),
+				},
 			},
-		})
+		}
+	}
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code:     "s4",
+				Children: children,
+			},
+		},
 	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid child command setup: \"s4.childCommands\" added exceeds max size of 100")
@@ -240,25 +259,27 @@ func TestChildCommandsAddedExceedMax(t *testing.T) {
 func TestChildCommandInvalidCodeInput(t *testing.T) {
 	for _, code := range InvalidCodes {
 		// given
-		command := NewCommand(NewCommandInput{
-			Code: "s4",
-		})
-		command.AddChildCommand(AddChildCommandInput{
-			Code: code,
-			Parameters: []Parameter{
-				NewCommandParameter(NewCommandParameterInput{
-					Code: "bucket-name",
-				}),
+		app := App{
+			Code: "App",
+			Commands: []Command{
+				{
+					Code: "s4",
+					Children: []ChildCommand{
+						{
+							Code: code,
+							Parameters: []Parameter{
+								{
+									Code: "bucket-name",
+								},
+							},
+						},
+					},
+				},
 			},
-		})
+		}
 
 		// when
-		_, err := NewApp(NewAppInput{
-			Code: "App",
-			Commands: []*Command{
-				command,
-			},
-		})
+		err := app.validate()
 
 		// then
 		assertError(t, err, fmt.Sprintf("invalid child command setup: \"s4.%v\" has invalid characters [A-Za-z0-9_-]", code))
@@ -267,23 +288,25 @@ func TestChildCommandInvalidCodeInput(t *testing.T) {
 
 func TestChildCommandDuplicateCode(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-	})
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+					},
+					{
+						Code: "make-bucket",
+					},
+				},
+			},
+		},
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid child command setup: \"s4.make-bucket\" is provided more than once")
@@ -291,49 +314,53 @@ func TestChildCommandDuplicateCode(t *testing.T) {
 
 func TestParameterCodeNotProvided(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{}),
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+						Parameters: []Parameter{
+							{},
+						},
+					},
+				},
+			},
 		},
-	})
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
-	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.parameters[*].Code\" is not provided")
+	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.Parameters[*].Code\" is not provided")
 }
 
 func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code: VeryLongLongCode,
-			}),
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+						Parameters: []Parameter{
+							{
+								Code: VeryLongLongCode,
+							},
+						},
+					},
+				},
+			},
 		},
-	})
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, fmt.Sprintf("invalid parameter setup: \"s4.make-bucket.%v...\" exceeds max size of 15", VeryLongLongCode[:15]))
@@ -341,54 +368,59 @@ func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 
 func TestParametersAddedExceedMax(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
 	parameters := make([]Parameter, ListsMaxSize)
 	for i := 0; i < ListsMaxSize; i++ {
-		parameters[i] = NewCommandParameter(NewCommandParameterInput{
+		parameters[i] = Parameter{
 			Code: fmt.Sprintf("bucket-name-v%d", i),
-		})
+		}
 	}
-	command.AddChildCommand(AddChildCommandInput{
-		Code:       "make-bucket",
-		Parameters: parameters,
-	})
+
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code:       "make-bucket",
+						Parameters: parameters,
+					},
+				},
+			},
+		},
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
-	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.parameters\" added exceeds max size of 100")
+	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.Parameters\" added exceeds max size of 100")
 }
 
 func TestParameterInvalidCodeInput(t *testing.T) {
 	for _, code := range InvalidCodes {
 		// given
-		command := NewCommand(NewCommandInput{
-			Code: "s4",
-		})
-		command.AddChildCommand(AddChildCommandInput{
-			Code: "make-bucket",
-			Parameters: []Parameter{
-				NewCommandParameter(NewCommandParameterInput{
-					Code: code,
-				}),
+		app := App{
+			Code: "App",
+			Commands: []Command{
+				{
+					Code: "s4",
+					Children: []ChildCommand{
+						{
+							Code: "make-bucket",
+							Parameters: []Parameter{
+								{
+									Code: code,
+								},
+							},
+						},
+					},
+				},
 			},
-		})
+		}
 
 		// when
-		_, err := NewApp(NewAppInput{
-			Code: "App",
-			Commands: []*Command{
-				command,
-			},
-		})
+		err := app.validate()
 
 		// then
 		assertError(t, err, fmt.Sprintf("invalid parameter setup: \"s4.make-bucket.%v\" has invalid characters [A-Za-z0-9_-]", code))
@@ -397,28 +429,30 @@ func TestParameterInvalidCodeInput(t *testing.T) {
 
 func TestParameterDuplicateCode(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code: "bucket-name",
-			}),
-			NewCommandParameter(NewCommandParameterInput{
-				Code: "bucket-name",
-			}),
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+						Parameters: []Parameter{
+							{
+								Code: "bucket-name",
+							},
+							{
+								Code: "bucket-name",
+							},
+						},
+					},
+				},
+			},
 		},
-	})
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" is provided more than once")
@@ -426,26 +460,28 @@ func TestParameterDuplicateCode(t *testing.T) {
 
 func TestRequiredParameterButFlag(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code: "s4",
-	})
-	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code:   "bucket-name",
-				IsFlag: true,
-			}),
+	app := App{
+		Code: "App",
+		Commands: []Command{
+			{
+				Code: "s4",
+				Children: []ChildCommand{
+					{
+						Code: "make-bucket",
+						Parameters: []Parameter{
+							{
+								Code: "bucket-name",
+								Flag: true,
+							},
+						},
+					},
+				},
+			},
 		},
-	})
+	}
 
 	// when
-	_, err := NewApp(NewAppInput{
-		Code: "App",
-		Commands: []*Command{
-			command,
-		},
-	})
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be required and a flag at the same time")
@@ -453,19 +489,19 @@ func TestRequiredParameterButFlag(t *testing.T) {
 
 func TestCommandWithoutChildCommand(t *testing.T) {
 	// given
-	command := NewCommand(NewCommandInput{
-		Code:        "test",
-		Description: "Test Me",
-	})
-
-	// when
-	_, err := NewApp(NewAppInput{
+	app := App{
 		Code:        "tester",
 		Description: "Tester App",
-		Commands: []*Command{
-			command,
+		Commands: []Command{
+			{
+				Code:        "test",
+				Description: "Test Me",
+			},
 		},
-	})
+	}
+
+	// when
+	err := app.validate()
 
 	// then
 	assertError(t, err, "invalid command setup: \"test\" should have atleast one child command")

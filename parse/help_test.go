@@ -6,12 +6,12 @@ func TestAppHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i <= len(HelpCommandAliases); i++ {
+	for i := 0; i <= len(HelpCommandaliases); i++ {
 		var args []string
-		if i == len(HelpCommandAliases) {
+		if i == len(HelpCommandaliases) {
 			args = []string{}
 		} else {
-			args = []string{HelpCommandAliases[i]}
+			args = []string{HelpCommandaliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -22,7 +22,7 @@ func TestAppHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Owsome cli
 
-  usage: ows [command] [subcommand] [...parameters]
+  usage: ows [command] [subcommand] [...Parameters]
 
   commands:
     sss  -> SSS Queue Operations
@@ -36,12 +36,12 @@ func TestSssHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i <= len(HelpCommandAliases); i++ {
+	for i := 0; i <= len(HelpCommandaliases); i++ {
 		var args []string
-		if i == len(HelpCommandAliases) {
+		if i == len(HelpCommandaliases) {
 			args = []string{SSS_CODE}
 		} else {
-			args = []string{SSS_CODE, HelpCommandAliases[i]}
+			args = []string{SSS_CODE, HelpCommandaliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -52,7 +52,7 @@ func TestSssHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `SSS Queue Operations
 
-  usage: sss [subcommand] [...parameters]
+  usage: sss [subcommand] [...Parameters]
 
   subcommands:
     version      -> Show SSS version
@@ -67,12 +67,12 @@ func TestS4Help(t *testing.T) {
 	// tiven
 	testApp := newTestApp(t)
 
-	for i := 0; i <= len(HelpCommandAliases); i++ {
+	for i := 0; i <= len(HelpCommandaliases); i++ {
 		var args []string
-		if i == len(HelpCommandAliases) {
+		if i == len(HelpCommandaliases) {
 			args = []string{S4_CODE}
 		} else {
-			args = []string{S4_CODE, HelpCommandAliases[i]}
+			args = []string{S4_CODE, HelpCommandaliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -82,7 +82,7 @@ func TestS4Help(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `S4 Bucket Operations
 
-  usage: s4 [subcommand] [...parameters]
+  usage: s4 [subcommand] [...Parameters]
 
   subcommands:
     make-bucket  -> Create S4 bucket
@@ -96,8 +96,8 @@ func TestSssVersionHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i < len(HelpCommandAliases); i++ {
-		args := []string{SSS_CODE, "version", HelpCommandAliases[i]}
+	for i := 0; i < len(HelpCommandaliases); i++ {
+		args := []string{SSS_CODE, "version", HelpCommandaliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -116,8 +116,8 @@ func TestSssListQueuesHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i < len(HelpCommandAliases); i++ {
-		args := []string{SSS_CODE, "list-queues", HelpCommandAliases[i]}
+	for i := 0; i < len(HelpCommandaliases); i++ {
+		args := []string{SSS_CODE, "list-queues", HelpCommandaliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -127,7 +127,7 @@ func TestSssListQueuesHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Lists SSS queues
 
-  usage: list-queues [...parameters]
+  usage: list-queues [...Parameters]
 
   parameters:
     --page-size -> pagination (optional)
@@ -140,8 +140,8 @@ func TestSssSendMessageHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i < len(HelpCommandAliases); i++ {
-		args := []string{SSS_CODE, "send-message", HelpCommandAliases[i]}
+	for i := 0; i < len(HelpCommandaliases); i++ {
+		args := []string{SSS_CODE, "send-message", HelpCommandaliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -151,7 +151,7 @@ func TestSssSendMessageHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Send string message to SSS queue
 
-  usage: send-message [...parameters]
+  usage: send-message [...Parameters]
 
   parameters:
     --queue-url -> the url of the SSS queue (required)

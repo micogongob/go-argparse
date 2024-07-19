@@ -7,22 +7,6 @@ import (
 )
 
 var VeryVeryLongParamValue = strings.Repeat("X", 1001)
-var InvalidParamValues = []string{
-	"*",
-	"\\",
-	"/",
-	"<",
-	">",
-	"%",
-	"$",
-	"^",
-	"#",
-	"!",
-	"?",
-	"@",
-	"&",
-	"--",
-}
 
 func TestRequiredParameterKeyNotProvided(t *testing.T) {
 	for i := 0; i < 2; i++ {
@@ -136,38 +120,6 @@ func TestParameterValueCharLengthExceedsMax(t *testing.T) {
 		// then
 		assertError(t, err, "invalid parameter value: \"--queue-url\" exceeds max of 1000")
 		assertStringEquals(t, parsedOutput.helpMessage, "")
-	}
-}
-
-func TestParameterInvalidValueInput(t *testing.T) {
-	for _, paramValue := range InvalidParamValues {
-		for i := 0; i < 2; i++ {
-			// given
-			var args []string
-			if i == 0 {
-				args = []string{
-					SSS_CODE,
-					"send-message",
-					"--queue-url",
-					fmt.Sprintf("this-is-the-prefix-%v", paramValue),
-				}
-			} else {
-				args = []string{
-					SSS_CODE,
-					"send-message",
-					fmt.Sprintf("--queue-url=this-is-the-prefix-%v", paramValue),
-				}
-			}
-			t.Logf("Args: %v", args)
-			testApp := newTestApp(t)
-
-			// when
-			parsedOutput, err := testApp.parseStrings(args)
-
-			// then
-			assertError(t, err, "invalid parameter value: \"--queue-url\" contains not allowed characters (*\\\\<>%$^#!?@&|--)")
-			assertStringEquals(t, parsedOutput.helpMessage, "")
-		}
 	}
 }
 

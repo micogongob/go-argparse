@@ -9,72 +9,76 @@ const (
 	S4_CODE  = "s4"
 )
 
-var HelpCommandAliases = []string{"help", "--help", "-h"}
+var HelpCommandaliases = []string{"help", "--help", "-h"}
 
 func newTestApp(t *testing.T) App {
-	sssCommand := NewCommand(NewCommandInput{
-		Code:        SSS_CODE,
-		Description: "SSS Queue Operations",
-	})
-	sssCommand.AddChildCommand(AddChildCommandInput{
-		Code:        "version",
-		Description: "Show SSS version",
-	})
-	sssCommand.AddChildCommand(AddChildCommandInput{
-		Code:        "list-queues",
-		Description: "Lists SSS queues",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code:        "page-size",
-				Description: "pagination",
-				IsOptional:  true,
-			}),
-			NewCommandParameter(NewCommandParameterInput{
-				Code:        "debug",
-				Description: "DEBUG logging",
-				IsOptional:  true,
-				IsFlag:      true,
-			}),
-		},
-	})
-	sssCommand.AddChildCommand(AddChildCommandInput{
-		Code:        "send-message",
-		Description: "Send string message to SSS queue",
-		Parameters: []Parameter{
-			NewCommandParameter(NewCommandParameterInput{
-				Code:        "queue-url",
-				Description: "the url of the SSS queue",
-			}),
-			NewCommandParameter(NewCommandParameterInput{
-				Code:        "debug",
-				Description: "DEBUG logging",
-				IsOptional:  true,
-				IsFlag:      true,
-			}),
-		},
-	})
-
-	s4Command := NewCommand(NewCommandInput{
-		Code:        S4_CODE,
-		Description: "S4 Bucket Operations",
-	})
-	s4Command.AddChildCommand(AddChildCommandInput{
-		Code:        "make-bucket",
-		Description: "Create S4 bucket",
-	})
-	s4Command.AddChildCommand(AddChildCommandInput{
-		Code:        "copy-objects",
-		Description: "Copies object between s4 buckets",
-	})
-
-	app, err := NewApp(NewAppInput{
+	app := App{
 		Code:        APP_CODE,
 		Description: APP_DESC,
-		Commands: []*Command{
-			sssCommand,
-			s4Command,
+		Commands: []Command{
+			{
+				Code:        SSS_CODE,
+				Description: "SSS Queue Operations",
+				Children: []ChildCommand{
+					{
+						Code:        "version",
+						Description: "Show SSS version",
+					},
+					{
+
+						Code:        "list-queues",
+						Description: "Lists SSS queues",
+						Parameters: []Parameter{
+							{
+								Code:        "page-size",
+								Description: "pagination",
+								Optional:    true,
+							},
+							{
+								Code:        "debug",
+								Description: "DEBUG logging",
+								Optional:    true,
+								Flag:        true,
+							},
+						},
+					},
+					{
+						Code:        "send-message",
+						Description: "Send string message to SSS queue",
+						Parameters: []Parameter{
+							{
+								Code:        "queue-url",
+								Description: "the url of the SSS queue",
+							},
+							{
+								Code:        "debug",
+								Description: "DEBUG logging",
+								Optional:    true,
+								Flag:        true,
+							},
+						},
+					},
+				},
+			},
+			{
+				Code:        S4_CODE,
+				Description: "S4 Bucket Operations",
+				Children: []ChildCommand{
+					{
+						Code:        "make-bucket",
+						Description: "Create S4 bucket",
+					},
+					{
+						Code:        "copy-objects",
+						Description: "Copies object between s4 buckets",
+					},
+				},
+			},
 		},
-	})
+	}
+
+	err := app.validate()
+
 	assertNilError(t, err)
 	return app
 }

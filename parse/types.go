@@ -1,30 +1,30 @@
 package parse
 
 type App struct {
-	code        string
-	description string
-	commands    []Command
+	Code        string
+	Description string
+	Commands    []Command
 }
 
 type Command struct {
-	code        string
-	description string
+	Code        string
+	Description string
 	aliases     []string
-	children    []ChildCommand
+	Children    []ChildCommand
 }
 
 type ChildCommand struct {
-	code        string
-	description string
+	Code        string
+	Description string
 	aliases     []string
-	parameters  []Parameter
+	Parameters  []Parameter
 }
 
 type Parameter struct {
-	code        string
-	description string
-	isOptional  bool
-	isFlag      bool
+	Code        string
+	Description string
+	Optional    bool
+	Flag        bool
 }
 
 type helpInfo struct {
@@ -37,28 +37,4 @@ type helpInfo struct {
 
 type parseOutput struct {
 	helpMessage string
-}
-
-type NewCommandInput struct {
-	Code        string
-	Description string
-}
-
-type AddChildCommandInput struct {
-	Code        string
-	Description string
-	Parameters  []Parameter
-}
-
-type NewCommandParameterInput struct {
-	Code        string
-	Description string
-	IsOptional  bool
-	IsFlag      bool
-}
-
-type NewAppInput struct {
-	Code        string
-	Description string
-	Commands    []*Command
 }

@@ -6,13 +6,13 @@ import (
 )
 
 const (
-	PARAMETER_VALUE_MAX_SIZE = 1000
+	PARAMETER_MAX_SIZE = 1000
 )
 
 func (command *ChildCommand) requiredParameters() []Parameter {
 	params := []Parameter{}
-	for _, param := range command.parameters {
-		if !param.isOptional {
+	for _, param := range command.Parameters {
+		if !param.Optional {
 			params = append(params, param)
 		}
 	}
@@ -24,7 +24,7 @@ func (command *ChildCommand) parseParameterValues(args []string) error {
 	if err := validateRequiredParameters(requiredParameters, args); err != nil {
 		return err
 	}
-	parameterValues, err := filterParameterValues(command.parameters, args)
+	parameterValues, err := filterParameterValues(command.Parameters, args)
 	if err != nil {
 		return err
 	}
@@ -40,16 +40,16 @@ func (command *ChildCommand) parseParameterValues(args []string) error {
 func (parameter *Parameter) matchesArg(rawArgValue string) (bool, bool) {
 	usingEqualsAssignment, values := getEqualAssigntmentValues(rawArgValue)
 	if usingEqualsAssignment {
-		return fmt.Sprintf("--%v", parameter.code) == values[0], usingEqualsAssignment
+		return fmt.Sprintf("--%v", parameter.Code) == values[0], usingEqualsAssignment
 	} else {
-		return fmt.Sprintf("--%v", parameter.code) == rawArgValue, usingEqualsAssignment
+		return fmt.Sprintf("--%v", parameter.Code) == rawArgValue, usingEqualsAssignment
 	}
 }
 
 func toValidationMsgFormat(params []Parameter) string {
 	s := []string{}
 	for _, v := range params {
-		s = append(s, fmt.Sprintf("--%v", v.code))
+		s = append(s, fmt.Sprintf("--%v", v.Code))
 	}
 	return strings.Join(s, ",")
 }
@@ -94,41 +94,41 @@ func filterParameterValues(parameters []Parameter, args []string) (map[string]st
 				continue
 			}
 
-			if param.isFlag {
+			if param.Flag {
 				if usingEqualsAssignment, _ := getEqualAssigntmentValues(rawArgValue); usingEqualsAssignment {
-					return map[string]string{}, fmt.Errorf("invalid parameter value: \"--%v\" flag parameter cannot have value", param.code)
+					return map[string]string{}, fmt.Errorf("invalid parameter value: \"--%v\" flag parameter cannot have value", param.Code)
 				}
 				if err := validateIfNewParameterValue(&parameterValues, param); err != nil {
 					return map[string]string{}, err
 				}
 				// TODO improve types of parameterValues
-				parameterValues[param.code] = "1"
+				parameterValues[param.Code] = "1"
 				argFoundParamMatch = true
-				break 
+				break
 			}
 			if usingEqualsAssignment {
 				if err := validateIfNewParameterValue(&parameterValues, param); err != nil {
 					return map[string]string{}, err
 				}
 				_, values := getEqualAssigntmentValues(rawArgValue)
-				parameterValues[param.code] = values[1]
+				parameterValues[param.Code] = values[1]
 				argFoundParamMatch = true
-				break 
+				break
 			} else {
 				hasNextArg := len(args) > (i + 1)
 				if !hasNextArg {
-					return map[string]string{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.code)
+					return map[string]string{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.Code)
 				}
 
 				nextArgValue := args[i+1]
 				if isParameterFormat(nextArgValue) {
-					return map[string]string{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.code)
+					return map[string]string{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.Code)
 				}
 
 				if err := validateIfNewParameterValue(&parameterValues, param); err != nil {
 					return map[string]string{}, err
 				}
-				parameterValues[param.code] = nextArgValue
+				parameterValues[param.Code] = nextArgValue
 				i++
 				argFoundParamMatch = true
 				break
@@ -152,8 +152,8 @@ func filterParameterValues(parameters []Parameter, args []string) (map[string]st
 }
 
 func validateIfNewParameterValue(parameterValues *map[string]string, param Parameter) error {
-	if _, ok := (*parameterValues)[param.code]; ok {
-		return fmt.Errorf("invalid parameter: \"--%v\" was provided twice", param.code)
+	if _, ok := (*parameterValues)[param.Code]; ok {
+		return fmt.Errorf("invalid parameter: \"--%v\" was provided twice", param.Code)
 	}
 	return nil
 }
@@ -183,8 +183,8 @@ func validateParameterValues(parameterValues map[string]string) error {
 		if strings.ReplaceAll(value, " ", "") == "" {
 			return fmt.Errorf("missing parameter value: \"--%v\" was not provided", key)
 		}
-		if len(value) > PARAMETER_VALUE_MAX_SIZE {
-			return fmt.Errorf("invalid parameter value: \"--%v\" exceeds max of %d", key, PARAMETER_VALUE_MAX_SIZE)
+		if len(value) > PARAMETER_MAX_SIZE {
+			return fmt.Errorf("invalid parameter value: \"--%v\" exceeds max of %d", key, PARAMETER_MAX_SIZE)
 		}
 	}
 	return nil

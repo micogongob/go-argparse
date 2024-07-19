@@ -5,15 +5,15 @@ import (
 	"strings"
 )
 
-var HelpCommand = Command{
-	code:        "help",
-	description: "Show help",
+var helpCommand = Command{
+	Code:        "help",
+	Description: "Show help",
 	aliases:     []string{"--help", "-h"},
 }
 
-var HelpChildCommand = ChildCommand{
-	code:        "help",
-	description: "Show help",
+var helpChildCommand = ChildCommand{
+	Code:        "help",
+	Description: "Show help",
 	aliases:     []string{"--help", "-h"},
 }
 
@@ -67,16 +67,16 @@ func padRight(source string, padLength int) string {
 }
 
 func (hp *App) Help() helpInfo {
-	children := make([]helpInfo, len(hp.commands))
+	children := make([]helpInfo, len(hp.Commands))
 
-	for k, v := range hp.commands {
+	for k, v := range hp.Commands {
 		children[k] = v.Help()
 	}
 
 	return helpInfo{
-		code:         hp.code,
-		description:  hp.description,
-		usageSuffix:  "[command] [subcommand] [...parameters]",
+		code:         hp.Code,
+		description:  hp.Description,
+		usageSuffix:  "[command] [subcommand] [...Parameters]",
 		childrenName: "commands",
 		children:     children,
 	}
@@ -85,20 +85,20 @@ func (hp *App) Help() helpInfo {
 func (hp *Command) Help() helpInfo {
 	var description string
 	if len(hp.aliases) <= 0 {
-		description = hp.description
+		description = hp.Description
 	} else {
-		description = fmt.Sprintf("%v. Alternatives: %v", hp.description, strings.Join(hp.aliases, ", "))
+		description = fmt.Sprintf("%v. Alternatives: %v", hp.Description, strings.Join(hp.aliases, ", "))
 	}
 
-	children := make([]helpInfo, len(hp.children))
-	for k, v := range hp.children {
+	children := make([]helpInfo, len(hp.Children))
+	for k, v := range hp.Children {
 		children[k] = v.Help()
 	}
 
 	return helpInfo{
-		code:         hp.code,
+		code:         hp.Code,
 		description:  description,
-		usageSuffix:  "[subcommand] [...parameters]",
+		usageSuffix:  "[subcommand] [...Parameters]",
 		childrenName: "subcommands",
 		children:     children,
 	}
@@ -107,20 +107,20 @@ func (hp *Command) Help() helpInfo {
 func (hp *ChildCommand) Help() helpInfo {
 	var description string
 	if len(hp.aliases) <= 0 {
-		description = hp.description
+		description = hp.Description
 	} else {
-		description = fmt.Sprintf("%v. Alternatives: %v", hp.description, strings.Join(hp.aliases, ", "))
+		description = fmt.Sprintf("%v. Alternatives: %v", hp.Description, strings.Join(hp.aliases, ", "))
 	}
 
-	children := make([]helpInfo, len(hp.parameters))
-	for k, v := range hp.parameters {
+	children := make([]helpInfo, len(hp.Parameters))
+	for k, v := range hp.Parameters {
 		children[k] = v.Help()
 	}
 
 	return helpInfo{
-		code:         hp.code,
+		code:         hp.Code,
 		description:  description,
-		usageSuffix:  "[...parameters]",
+		usageSuffix:  "[...Parameters]",
 		childrenName: "parameters",
 		children:     children,
 	}
@@ -129,20 +129,20 @@ func (hp *ChildCommand) Help() helpInfo {
 func (hp *Parameter) Help() helpInfo {
 	var description strings.Builder
 
-	if hp.isFlag {
-		description.WriteString(fmt.Sprintf("%v. Flag", hp.description))
+	if hp.Flag {
+		description.WriteString(fmt.Sprintf("%v. Flag", hp.Description))
 	} else {
-		description.WriteString(hp.description)
+		description.WriteString(hp.Description)
 	}
 
-	if hp.isOptional {
+	if hp.Optional {
 		description.WriteString(" (optional)")
 	} else {
 		description.WriteString(" (required)")
 	}
 
 	return helpInfo{
-		code:        fmt.Sprintf("--%v", hp.code),
+		code:        fmt.Sprintf("--%v", hp.Code),
 		description: description.String(),
 	}
 }
