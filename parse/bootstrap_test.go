@@ -100,7 +100,7 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 
 	// when
 	_, err := NewApp(NewAppInput{
-		Code:     "App",
+		Code: "App",
 		Commands: commands,
 	})
 
@@ -351,7 +351,7 @@ func TestParametersAddedExceedMax(t *testing.T) {
 		})
 	}
 	command.AddChildCommand(AddChildCommandInput{
-		Code:       "make-bucket",
+		Code: "make-bucket",
 		Parameters: parameters,
 	})
 
@@ -427,16 +427,12 @@ func TestParameterDuplicateCode(t *testing.T) {
 func TestRequiredParameterButFlag(t *testing.T) {
 	// given
 	command := NewCommand(NewCommandInput{
-		Code:        "test",
-		Description: "Test Me",
+		Code: "s4",
 	})
 	command.AddChildCommand(AddChildCommandInput{
-		Code:        "file-name",
-		Description: "Name of file to test",
+		Code:        "make-bucket",
 		Parameters: []Parameter{
 			NewCommandParameter(NewCommandParameterInput{
-				Code:        "make-bucket",
-				Description: "Toggle make-bucket logging",
 				IsFlag:      true,
 			}),
 		},
@@ -452,7 +448,7 @@ func TestRequiredParameterButFlag(t *testing.T) {
 	})
 
 	// then
-	assertError(t, err, "invalid parameter setup: \"make-bucket\" cannot be required and a flag at the same time")
+	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be required and a flag at the same time")
 }
 
 func TestCommandWithoutChildCommand(t *testing.T) {

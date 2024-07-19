@@ -112,7 +112,7 @@ func validateCommand(command Command, commandCodes map[string]bool) error {
 				return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" has invalid characters [A-Za-z0-9_-]", command.code, childCommand.code, parameter.code)
 			}
 			if !parameter.isOptional && parameter.isFlag {
-				return fmt.Errorf("invalid parameter setup: \"%v\" cannot be required and a flag at the same time", parameter.code)
+				return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" cannot be required and a flag at the same time", command.code, childCommand.code, parameter.code)
 			}
 			if _, ok := parameterCodes[parameter.code]; ok {
 				return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" is provided more than once", command.code, childCommand.code, parameter.code)
