@@ -100,7 +100,7 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 
 	// when
 	_, err := NewApp(NewAppInput{
-		Code: "App",
+		Code:     "App",
 		Commands: commands,
 	})
 
@@ -351,7 +351,7 @@ func TestParametersAddedExceedMax(t *testing.T) {
 		})
 	}
 	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
+		Code:       "make-bucket",
 		Parameters: parameters,
 	})
 
@@ -430,18 +430,18 @@ func TestRequiredParameterButFlag(t *testing.T) {
 		Code: "s4",
 	})
 	command.AddChildCommand(AddChildCommandInput{
-		Code:        "make-bucket",
+		Code: "make-bucket",
 		Parameters: []Parameter{
 			NewCommandParameter(NewCommandParameterInput{
-				IsFlag:      true,
+				Code:   "bucket-name",
+				IsFlag: true,
 			}),
 		},
 	})
 
 	// when
 	_, err := NewApp(NewAppInput{
-		Code:        "tester",
-		Description: "Tester App",
+		Code: "App",
 		Commands: []*Command{
 			command,
 		},
