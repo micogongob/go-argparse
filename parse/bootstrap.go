@@ -4,8 +4,8 @@ import "fmt"
 
 const (
 	CODE_WHITELIST_REGEX_PATTERN = "^[A-Za-z0-9_-]*$"
-	CODE_MAX_CHAR_LENGTH = 15
-	LISTS_MAX_SIZE       = 100
+	CODE_MAX_CHAR_LENGTH         = 15
+	LISTS_MAX_SIZE               = 100
 )
 
 func (app *App) validate() error {

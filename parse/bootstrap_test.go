@@ -40,7 +40,7 @@ func TestCommandCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Children: []*ChildCommand{
 					{
@@ -62,7 +62,7 @@ func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: VeryLongLongCode,
 				Children: []*ChildCommand{
@@ -105,7 +105,7 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 		}
 	}
 	app := App{
-		Code: "App",
+		Code:     "App",
 		Commands: commands,
 	}
 
@@ -121,7 +121,7 @@ func TestCommandInvalidCodeInput(t *testing.T) {
 		// given
 		app := App{
 			Code: "App",
-			Commands:[]*Command{
+			Commands: []*Command{
 				{
 					Code: code,
 					Children: []*ChildCommand{
@@ -150,7 +150,7 @@ func TestCommandDuplicateCode(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -181,13 +181,11 @@ func TestChildCommandCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
-					{
-
-					},
+					{},
 				},
 			},
 		},
@@ -204,7 +202,7 @@ func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -243,9 +241,9 @@ func TestChildCommandsAddedExceedMax(t *testing.T) {
 	}
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
-				Code: "s4",
+				Code:     "s4",
 				Children: children,
 			},
 		},
@@ -263,7 +261,7 @@ func TestChildCommandInvalidCodeInput(t *testing.T) {
 		// given
 		app := App{
 			Code: "App",
-			Commands:[]*Command{
+			Commands: []*Command{
 				{
 					Code: "s4",
 					Children: []*ChildCommand{
@@ -292,7 +290,7 @@ func TestChildCommandDuplicateCode(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -310,7 +308,6 @@ func TestChildCommandDuplicateCode(t *testing.T) {
 	// when
 	err := app.validate()
 
-
 	// then
 	assertError(t, err, "invalid child command setup: \"s4.make-bucket\" is provided more than once")
 }
@@ -319,15 +316,14 @@ func TestParameterCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
 						Parameters: []*Parameter{
-							{
-							},
+							{},
 						},
 					},
 				},
@@ -346,7 +342,7 @@ func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -381,7 +377,7 @@ func TestParametersAddedExceedMax(t *testing.T) {
 
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -406,7 +402,7 @@ func TestParameterInvalidCodeInput(t *testing.T) {
 		// given
 		app := App{
 			Code: "App",
-			Commands:[]*Command{
+			Commands: []*Command{
 				{
 					Code: "s4",
 					Children: []*ChildCommand{
@@ -435,7 +431,7 @@ func TestParameterDuplicateCode(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -466,7 +462,7 @@ func TestRequiredParameterButFlag(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code: "s4",
 				Children: []*ChildCommand{
@@ -496,7 +492,7 @@ func TestCommandWithoutChildCommand(t *testing.T) {
 	app := App{
 		Code:        "tester",
 		Description: "Tester App",
-		Commands:[]*Command{
+		Commands: []*Command{
 			{
 				Code:        "test",
 				Description: "Test Me",

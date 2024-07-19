@@ -32,13 +32,13 @@ func newTestApp(t *testing.T) App {
 							{
 								Code:        "page-size",
 								Description: "pagination",
-								Optional:  true,
+								Optional:    true,
 							},
 							{
 								Code:        "debug",
 								Description: "DEBUG logging",
-								Optional:  true,
-								Flag:      true,
+								Optional:    true,
+								Flag:        true,
 							},
 						},
 					},
@@ -53,23 +53,23 @@ func newTestApp(t *testing.T) App {
 							{
 								Code:        "debug",
 								Description: "DEBUG logging",
-								Optional:  true,
-								Flag:      true,
+								Optional:    true,
+								Flag:        true,
 							},
 						},
 					},
 				},
 			},
 			{
-				Code: S4_CODE,
+				Code:        S4_CODE,
 				Description: "S4 Bucket Operations",
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:        "make-bucket",
 						Description: "Create S4 bucket",
 					},
 					{
-						Code: "copy-objects",
+						Code:        "copy-objects",
 						Description: "Copies object between s4 buckets",
 					},
 				},
