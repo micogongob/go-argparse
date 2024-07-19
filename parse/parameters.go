@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	PARAMETER_VALUE_MAX_SIZE = 1000
+	PARAMETER_MAX_SIZE = 1000
 )
 
 func (command *ChildCommand) requiredParameters() []Parameter {
@@ -183,8 +183,8 @@ func validateParameterValues(parameterValues map[string]string) error {
 		if strings.ReplaceAll(value, " ", "") == "" {
 			return fmt.Errorf("missing parameter value: \"--%v\" was not provided", key)
 		}
-		if len(value) > PARAMETER_VALUE_MAX_SIZE {
-			return fmt.Errorf("invalid parameter value: \"--%v\" exceeds max of %d", key, PARAMETER_VALUE_MAX_SIZE)
+		if len(value) > PARAMETER_MAX_SIZE {
+			return fmt.Errorf("invalid parameter value: \"--%v\" exceeds max of %d", key, PARAMETER_MAX_SIZE)
 		}
 	}
 	return nil

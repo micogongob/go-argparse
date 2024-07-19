@@ -3,7 +3,7 @@ package parse
 import "fmt"
 
 const (
-	CODE_WHITELIST_REGEX = "^[A-Za-z0-9_-]*$"
+	CODE_WHITELIST_REGEX_PATTERN = "^[A-Za-z0-9_-]*$"
 	CODE_MAX_CHAR_LENGTH = 15
 	LISTS_MAX_SIZE       = 100
 )
@@ -95,7 +95,7 @@ func validateCommand(command *Command) error {
 	if len(command.code) > CODE_MAX_CHAR_LENGTH {
 		return fmt.Errorf("invalid command setup: \"%v...\" exceeds max size of %d", command.code[:CODE_MAX_CHAR_LENGTH], CODE_MAX_CHAR_LENGTH)
 	}
-	if !matchesRegex(command.code, CODE_WHITELIST_REGEX) {
+	if !matchesRegex(command.code, CODE_WHITELIST_REGEX_PATTERN) {
 		return fmt.Errorf("invalid command setup: \"%v\" has invalid characters [A-Za-z0-9_-]", command.code)
 	}
 	if len(command.children) <= 0 {
@@ -114,7 +114,7 @@ func validateChildCommand(command *Command, childCommand ChildCommand) error {
 	if len(childCommand.code) > CODE_MAX_CHAR_LENGTH {
 		return fmt.Errorf("invalid child command setup: \"%v.%v...\" exceeds max size of %d", command.code, childCommand.code[:CODE_MAX_CHAR_LENGTH], CODE_MAX_CHAR_LENGTH)
 	}
-	if !matchesRegex(childCommand.code, CODE_WHITELIST_REGEX) {
+	if !matchesRegex(childCommand.code, CODE_WHITELIST_REGEX_PATTERN) {
 		return fmt.Errorf("invalid child command setup: \"%v.%v\" has invalid characters [A-Za-z0-9_-]", command.code, childCommand.code)
 	}
 	if len(childCommand.parameters) > LISTS_MAX_SIZE {
@@ -130,7 +130,7 @@ func validateParameter(command *Command, childCommand ChildCommand, parameter Pa
 	if len(parameter.code) > CODE_MAX_CHAR_LENGTH {
 		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v...\" exceeds max size of %d", command.code, childCommand.code, parameter.code[:CODE_MAX_CHAR_LENGTH], CODE_MAX_CHAR_LENGTH)
 	}
-	if !matchesRegex(parameter.code, CODE_WHITELIST_REGEX) {
+	if !matchesRegex(parameter.code, CODE_WHITELIST_REGEX_PATTERN) {
 		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" has invalid characters [A-Za-z0-9_-]", command.code, childCommand.code, parameter.code)
 	}
 	if !parameter.isOptional && parameter.isFlag {
