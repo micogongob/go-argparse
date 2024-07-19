@@ -52,11 +52,10 @@ func (app *App) validate() error {
 	}
 
 	app.Commands = append(app.Commands, helpCommand)
-
 	return nil
 }
 
-func validateCommand(command Command) error {
+func validateCommand(command *Command) error {
 	if command.Code == "" {
 		return fmt.Errorf("invalid command setup: Code is not provided")
 	}
@@ -75,7 +74,7 @@ func validateCommand(command Command) error {
 	return nil
 }
 
-func validateChildCommand(command Command, childCommand ChildCommand) error {
+func validateChildCommand(command *Command, childCommand *ChildCommand) error {
 	if childCommand.Code == "" {
 		return fmt.Errorf("invalid child command setup: \"%v.childCommands[*].Code\" is not provided", command.Code)
 	}
@@ -91,7 +90,7 @@ func validateChildCommand(command Command, childCommand ChildCommand) error {
 	return nil
 }
 
-func validateParameter(command Command, childCommand ChildCommand, parameter Parameter) error {
+func validateParameter(command *Command, childCommand *ChildCommand, parameter *Parameter) error {
 	if parameter.Code == "" {
 		return fmt.Errorf("invalid parameter setup: \"%v.%v.Parameters[*].Code\" is not provided", command.Code, childCommand.Code)
 	}

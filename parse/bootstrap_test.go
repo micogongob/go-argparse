@@ -40,9 +40,9 @@ func TestCommandCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "s4",
 					},
@@ -62,13 +62,13 @@ func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: VeryLongLongCode,
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code: "bucket-name",
 							},
@@ -88,14 +88,14 @@ func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 
 func TestCommandsAddedExceedMax(t *testing.T) {
 	// given
-	commands := make([]Command, ListsMaxSize)
+	commands := make([]*Command, ListsMaxSize)
 	for i := 0; i < len(commands); i++ {
-		commands[i] = Command{
+		commands[i] = &Command{
 			Code: fmt.Sprintf("s%d", i),
-			Children: []ChildCommand{
+			Children: []*ChildCommand{
 				{
 					Code: "make-bucket",
-					Parameters: []Parameter{
+					Parameters: []*Parameter{
 						{
 							Code: "bucket-name",
 						},
@@ -105,7 +105,7 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 		}
 	}
 	app := App{
-		Code:     "App",
+		Code: "App",
 		Commands: commands,
 	}
 
@@ -121,13 +121,13 @@ func TestCommandInvalidCodeInput(t *testing.T) {
 		// given
 		app := App{
 			Code: "App",
-			Commands: []Command{
+			Commands:[]*Command{
 				{
 					Code: code,
-					Children: []ChildCommand{
+					Children: []*ChildCommand{
 						{
 							Code: "make-bucket",
-							Parameters: []Parameter{
+							Parameters: []*Parameter{
 								{
 									Code: "bucket-name",
 								},
@@ -150,10 +150,10 @@ func TestCommandDuplicateCode(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
 					},
@@ -161,7 +161,7 @@ func TestCommandDuplicateCode(t *testing.T) {
 			},
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
 					},
@@ -181,11 +181,13 @@ func TestChildCommandCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
-					{},
+				Children: []*ChildCommand{
+					{
+
+					},
 				},
 			},
 		},
@@ -202,13 +204,13 @@ func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: VeryLongLongCode,
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code: "bucket-name",
 							},
@@ -228,11 +230,11 @@ func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 
 func TestChildCommandsAddedExceedMax(t *testing.T) {
 	// given
-	children := make([]ChildCommand, ListsMaxSize)
+	children := make([]*ChildCommand, ListsMaxSize)
 	for i := 0; i < ListsMaxSize; i++ {
-		children[i] = ChildCommand{
+		children[i] = &ChildCommand{
 			Code: fmt.Sprintf("make-bucket-v%d", i),
-			Parameters: []Parameter{
+			Parameters: []*Parameter{
 				{
 					Code: "bucket-name",
 				},
@@ -241,9 +243,9 @@ func TestChildCommandsAddedExceedMax(t *testing.T) {
 	}
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
-				Code:     "s4",
+				Code: "s4",
 				Children: children,
 			},
 		},
@@ -261,13 +263,13 @@ func TestChildCommandInvalidCodeInput(t *testing.T) {
 		// given
 		app := App{
 			Code: "App",
-			Commands: []Command{
+			Commands:[]*Command{
 				{
 					Code: "s4",
-					Children: []ChildCommand{
+					Children: []*ChildCommand{
 						{
 							Code: code,
-							Parameters: []Parameter{
+							Parameters: []*Parameter{
 								{
 									Code: "bucket-name",
 								},
@@ -290,10 +292,10 @@ func TestChildCommandDuplicateCode(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
 					},
@@ -308,6 +310,7 @@ func TestChildCommandDuplicateCode(t *testing.T) {
 	// when
 	err := app.validate()
 
+
 	// then
 	assertError(t, err, "invalid child command setup: \"s4.make-bucket\" is provided more than once")
 }
@@ -316,14 +319,15 @@ func TestParameterCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
-						Parameters: []Parameter{
-							{},
+						Parameters: []*Parameter{
+							{
+							},
 						},
 					},
 				},
@@ -342,13 +346,13 @@ func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code: VeryLongLongCode,
 							},
@@ -368,19 +372,19 @@ func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 
 func TestParametersAddedExceedMax(t *testing.T) {
 	// given
-	parameters := make([]Parameter, ListsMaxSize)
+	parameters := make([]*Parameter, ListsMaxSize)
 	for i := 0; i < ListsMaxSize; i++ {
-		parameters[i] = Parameter{
+		parameters[i] = &Parameter{
 			Code: fmt.Sprintf("bucket-name-v%d", i),
 		}
 	}
 
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code:       "make-bucket",
 						Parameters: parameters,
@@ -402,13 +406,13 @@ func TestParameterInvalidCodeInput(t *testing.T) {
 		// given
 		app := App{
 			Code: "App",
-			Commands: []Command{
+			Commands:[]*Command{
 				{
 					Code: "s4",
-					Children: []ChildCommand{
+					Children: []*ChildCommand{
 						{
 							Code: "make-bucket",
-							Parameters: []Parameter{
+							Parameters: []*Parameter{
 								{
 									Code: code,
 								},
@@ -431,13 +435,13 @@ func TestParameterDuplicateCode(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code: "bucket-name",
 							},
@@ -462,13 +466,13 @@ func TestRequiredParameterButFlag(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code: "s4",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code: "make-bucket",
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code: "bucket-name",
 								Flag: true,
@@ -492,7 +496,7 @@ func TestCommandWithoutChildCommand(t *testing.T) {
 	app := App{
 		Code:        "tester",
 		Description: "Tester App",
-		Commands: []Command{
+		Commands:[]*Command{
 			{
 				Code:        "test",
 				Description: "Test Me",

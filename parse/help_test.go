@@ -6,12 +6,12 @@ func TestAppHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i <= len(HelpCommandaliases); i++ {
+	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
-		if i == len(HelpCommandaliases) {
+		if i == len(HelpCommandAliases) {
 			args = []string{}
 		} else {
-			args = []string{HelpCommandaliases[i]}
+			args = []string{HelpCommandAliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -36,12 +36,12 @@ func TestSssHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i <= len(HelpCommandaliases); i++ {
+	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
-		if i == len(HelpCommandaliases) {
+		if i == len(HelpCommandAliases) {
 			args = []string{SSS_CODE}
 		} else {
-			args = []string{SSS_CODE, HelpCommandaliases[i]}
+			args = []string{SSS_CODE, HelpCommandAliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -67,12 +67,12 @@ func TestS4Help(t *testing.T) {
 	// tiven
 	testApp := newTestApp(t)
 
-	for i := 0; i <= len(HelpCommandaliases); i++ {
+	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
-		if i == len(HelpCommandaliases) {
+		if i == len(HelpCommandAliases) {
 			args = []string{S4_CODE}
 		} else {
-			args = []string{S4_CODE, HelpCommandaliases[i]}
+			args = []string{S4_CODE, HelpCommandAliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -96,8 +96,8 @@ func TestSssVersionHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i < len(HelpCommandaliases); i++ {
-		args := []string{SSS_CODE, "version", HelpCommandaliases[i]}
+	for i := 0; i < len(HelpCommandAliases); i++ {
+		args := []string{SSS_CODE, "version", HelpCommandAliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -116,8 +116,8 @@ func TestSssListQueuesHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i < len(HelpCommandaliases); i++ {
-		args := []string{SSS_CODE, "list-queues", HelpCommandaliases[i]}
+	for i := 0; i < len(HelpCommandAliases); i++ {
+		args := []string{SSS_CODE, "list-queues", HelpCommandAliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -140,8 +140,8 @@ func TestSssSendMessageHelp(t *testing.T) {
 	// given
 	testApp := newTestApp(t)
 
-	for i := 0; i < len(HelpCommandaliases); i++ {
-		args := []string{SSS_CODE, "send-message", HelpCommandaliases[i]}
+	for i := 0; i < len(HelpCommandAliases); i++ {
+		args := []string{SSS_CODE, "send-message", HelpCommandAliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when

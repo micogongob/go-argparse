@@ -9,17 +9,17 @@ const (
 	S4_CODE  = "s4"
 )
 
-var HelpCommandaliases = []string{"help", "--help", "-h"}
+var HelpCommandAliases = []string{"help", "--help", "-h"}
 
 func newTestApp(t *testing.T) App {
 	app := App{
 		Code:        APP_CODE,
 		Description: APP_DESC,
-		Commands: []Command{
+		Commands: []*Command{
 			{
 				Code:        SSS_CODE,
 				Description: "SSS Queue Operations",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
 						Code:        "version",
 						Description: "Show SSS version",
@@ -28,24 +28,24 @@ func newTestApp(t *testing.T) App {
 
 						Code:        "list-queues",
 						Description: "Lists SSS queues",
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code:        "page-size",
 								Description: "pagination",
-								Optional:    true,
+								Optional:  true,
 							},
 							{
 								Code:        "debug",
 								Description: "DEBUG logging",
-								Optional:    true,
-								Flag:        true,
+								Optional:  true,
+								Flag:      true,
 							},
 						},
 					},
 					{
 						Code:        "send-message",
 						Description: "Send string message to SSS queue",
-						Parameters: []Parameter{
+						Parameters: []*Parameter{
 							{
 								Code:        "queue-url",
 								Description: "the url of the SSS queue",
@@ -53,23 +53,23 @@ func newTestApp(t *testing.T) App {
 							{
 								Code:        "debug",
 								Description: "DEBUG logging",
-								Optional:    true,
-								Flag:        true,
+								Optional:  true,
+								Flag:      true,
 							},
 						},
 					},
 				},
 			},
 			{
-				Code:        S4_CODE,
+				Code: S4_CODE,
 				Description: "S4 Bucket Operations",
-				Children: []ChildCommand{
+				Children: []*ChildCommand{
 					{
-						Code:        "make-bucket",
+						Code: "make-bucket",
 						Description: "Create S4 bucket",
 					},
 					{
-						Code:        "copy-objects",
+						Code: "copy-objects",
 						Description: "Copies object between s4 buckets",
 					},
 				},

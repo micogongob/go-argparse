@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-var helpCommand = Command{
+var helpCommand = &Command{
 	Code:        "help",
 	Description: "Show help",
 	aliases:     []string{"--help", "-h"},
 }
 
-var helpChildCommand = ChildCommand{
+var helpChildCommand = &ChildCommand{
 	Code:        "help",
 	Description: "Show help",
 	aliases:     []string{"--help", "-h"},

@@ -9,8 +9,8 @@ const (
 	PARAMETER_MAX_SIZE = 1000
 )
 
-func (command *ChildCommand) requiredParameters() []Parameter {
-	params := []Parameter{}
+func (command *ChildCommand) requiredParameters() []*Parameter {
+	params := []*Parameter{}
 	for _, param := range command.Parameters {
 		if !param.Optional {
 			params = append(params, param)
@@ -46,7 +46,7 @@ func (parameter *Parameter) matchesArg(rawArgValue string) (bool, bool) {
 	}
 }
 
-func toValidationMsgFormat(params []Parameter) string {
+func toValidationMsgFormat(params []*Parameter) string {
 	s := []string{}
 	for _, v := range params {
 		s = append(s, fmt.Sprintf("--%v", v.Code))
@@ -54,8 +54,8 @@ func toValidationMsgFormat(params []Parameter) string {
 	return strings.Join(s, ",")
 }
 
-func validateRequiredParameters(parameters []Parameter, args []string) error {
-	notProvidedRequiredParameters := []Parameter{}
+func validateRequiredParameters(parameters []*Parameter, args []string) error {
+	notProvidedRequiredParameters := []*Parameter{}
 
 	for _, param := range parameters {
 		exists := false
@@ -77,11 +77,11 @@ func validateRequiredParameters(parameters []Parameter, args []string) error {
 	return nil
 }
 
-func validateUnknownValues(parameters []Parameter, args []string) error {
+func validateUnknownValues(parameters []*Parameter, args []string) error {
 	return fmt.Errorf("Unimplemented validation")
 }
 
-func filterParameterValues(parameters []Parameter, args []string) (map[string]string, error) {
+func filterParameterValues(parameters []*Parameter, args []string) (map[string]string, error) {
 	parameterValues := map[string]string{}
 
 	for i := 0; i < len(args); i++ {
@@ -98,7 +98,7 @@ func filterParameterValues(parameters []Parameter, args []string) (map[string]st
 				if usingEqualsAssignment, _ := getEqualAssigntmentValues(rawArgValue); usingEqualsAssignment {
 					return map[string]string{}, fmt.Errorf("invalid parameter value: \"--%v\" flag parameter cannot have value", param.Code)
 				}
-				if err := validateIfNewParameterValue(&parameterValues, param); err != nil {
+				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
 					return map[string]string{}, err
 				}
 				// TODO improve types of parameterValues
@@ -107,7 +107,7 @@ func filterParameterValues(parameters []Parameter, args []string) (map[string]st
 				break
 			}
 			if usingEqualsAssignment {
-				if err := validateIfNewParameterValue(&parameterValues, param); err != nil {
+				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
 					return map[string]string{}, err
 				}
 				_, values := getEqualAssigntmentValues(rawArgValue)
@@ -125,7 +125,7 @@ func filterParameterValues(parameters []Parameter, args []string) (map[string]st
 					return map[string]string{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.Code)
 				}
 
-				if err := validateIfNewParameterValue(&parameterValues, param); err != nil {
+				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
 					return map[string]string{}, err
 				}
 				parameterValues[param.Code] = nextArgValue

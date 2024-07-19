@@ -3,21 +3,21 @@ package parse
 type App struct {
 	Code        string
 	Description string
-	Commands    []Command
+	Commands    []*Command
 }
 
 type Command struct {
 	Code        string
 	Description string
 	aliases     []string
-	Children    []ChildCommand
+	Children    []*ChildCommand
 }
 
 type ChildCommand struct {
 	Code        string
 	Description string
 	aliases     []string
-	Parameters  []Parameter
+	Parameters  []*Parameter
 }
 
 type Parameter struct {
@@ -25,6 +25,13 @@ type Parameter struct {
 	Description string
 	Optional    bool
 	Flag        bool
+}
+
+// TODO use as value for parameter values
+type ParameterValue struct {
+	StringValue  string
+	NumericValue int
+	BooleanValue bool
 }
 
 type helpInfo struct {
