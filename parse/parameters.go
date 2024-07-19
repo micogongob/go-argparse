@@ -5,10 +5,6 @@ import (
 	"strings"
 )
 
-const (
-	PARAMETER_MAX_SIZE = 1000
-)
-
 func (command *ChildCommand) requiredParameters() []*Parameter {
 	params := []*Parameter{}
 	for _, param := range command.Parameters {
@@ -175,6 +171,7 @@ func truncateForError(longString string) string {
 }
 
 func validateParameterValues(parameterValues map[string]string) error {
+	PARAMETER_MAX_SIZE := 1000
 	for key, value := range parameterValues {
 		if strings.ReplaceAll(value, " ", "") == "" {
 			return fmt.Errorf("missing parameter value: \"--%v\" was not provided", key)
