@@ -12,7 +12,7 @@ func NewCommand(input NewCommandInput) *Command {
 	return &Command{
 		code:        input.Code,
 		description: input.Description,
-		aliases:     []string{}, // TODO don't support aliases outside for now
+		aliases:     []string{}, // NOTE: might not support aliasess for now aside from "help" command
 	}
 }
 
@@ -21,6 +21,7 @@ func (command *Command) AddChildCommand(input AddChildCommandInput) {
 		code:        input.Code,
 		description: input.Description,
 		parameters:  input.Parameters,
+		aliases:     []string{}, // NOTE: might not support aliasess for now aside from "help" command
 	}
 	command.children = append(command.children, *childCommand)
 }

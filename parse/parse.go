@@ -65,11 +65,8 @@ func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 				helpMessage: helpToString(command.Help()),
 			}, nil
 		}
-		for _, parameter := range command.parameters {
-			if commandMatchesArg(parameter.code, []string{}, args[0]) {
-				// TODO handle callback or callback
-			}
-		}
+		err := command.parseParameterValues(args)
+		return parseOutput{}, err
 	}
 
 	requiredParameters := command.requiredParameters()
@@ -77,6 +74,6 @@ func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 		return parseOutput{}, fmt.Errorf("missing required parameter/s: \"%v\" was not provided", toValidationMsgFormat(requiredParameters))
 	}
 
-	// TODO invoke child command function, maybe add validation in bootstrap?
+	// TODO invoke child command function
 	return parseOutput{}, nil
 }

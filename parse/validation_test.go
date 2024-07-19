@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var VeryVeryLongParamValue = strings.Repeat("X", 101)
+var VeryVeryLongParamValue = strings.Repeat("X", 1001)
 var InvalidParamValues = []string{
 	"*",
 	"\\",
@@ -25,17 +25,24 @@ var InvalidParamValues = []string{
 }
 
 func TestRequiredParameterKeyNotProvided(t *testing.T) {
-	// given
-	args := []string{SSS_CODE, "send-message"}
-	t.Logf("Args: %v", args)
-	testApp := newTestApp(t)
+	for i := 0; i < 2; i++ {
+		// given
+		var args []string
+		if i == 0 {
+			args = []string{SSS_CODE, "send-message"}
+		} else {
+			args = []string{SSS_CODE, "send-message", "--debug"}
+		}
+		t.Logf("Args: %v", args)
+		testApp := newTestApp(t)
 
-	// when
-	parsedOutput, err := testApp.parseStrings(args)
+		// when
+		parsedOutput, err := testApp.parseStrings(args)
 
-	// then
-	assertError(t, err, "missing required parameter/s: \"--queue-url\" was not provided")
-	assertStringEquals(t, parsedOutput.helpMessage, "")
+		// then
+		assertError(t, err, "missing required parameter/s: \"--queue-url\" was not provided")
+		assertStringEquals(t, parsedOutput.helpMessage, "")
+	}
 }
 
 func TestRequiredParameterValueNotProvided(t *testing.T) {
@@ -54,7 +61,7 @@ func TestRequiredParameterValueNotProvided(t *testing.T) {
 		parsedOutput, err := testApp.parseStrings(args)
 
 		// then
-		assertError(t, err, "missing parameter value: \"--queue-url\" was not provided with a value")
+		assertError(t, err, "missing parameter value: \"--queue-url\" was not provided")
 		assertStringEquals(t, parsedOutput.helpMessage, "")
 	}
 }
@@ -75,7 +82,7 @@ func TestOptionalParameterValueNotProvided(t *testing.T) {
 		parsedOutput, err := testApp.parseStrings(args)
 
 		// then
-		assertError(t, err, "missing parameter value: \"--page-size\" was not provided with a value")
+		assertError(t, err, "missing parameter value: \"--page-size\" was not provided")
 		assertStringEquals(t, parsedOutput.helpMessage, "")
 	}
 }
@@ -96,7 +103,7 @@ func TestParameterValueIsBlank(t *testing.T) {
 		parsedOutput, err := testApp.parseStrings(args)
 
 		// then
-		assertError(t, err, "invalid parameter value: \"--queue-url\" cannot be blank")
+		assertError(t, err, "missing parameter value: \"--queue-url\" was not provided")
 		assertStringEquals(t, parsedOutput.helpMessage, "")
 	}
 }
@@ -142,13 +149,13 @@ func TestParameterInvalidValueInput(t *testing.T) {
 					SSS_CODE,
 					"send-message",
 					"--queue-url",
-					paramValue,
+					fmt.Sprintf("this-is-the-prefix-%v", paramValue),
 				}
 			} else {
 				args = []string{
 					SSS_CODE,
 					"send-message",
-					fmt.Sprintf("--queue-url=this-is-the-prefix %v", paramValue),
+					fmt.Sprintf("--queue-url=this-is-the-prefix-%v", paramValue),
 				}
 			}
 			t.Logf("Args: %v", args)
@@ -165,40 +172,54 @@ func TestParameterInvalidValueInput(t *testing.T) {
 }
 
 // TODO support list input and map?
-// func TestNonListParameterDuplicateKey(t *testing.T) {
-// 	for i := 0; i < 2; i++ {
-// 		// given
-// 		var args []string
-// 		if i == 0 {
-// 			args = []string{
-// 				SSS_CODE,
-// 				"send-message",
-// 				"--queue-url",
-// 				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
-// 				"--queue-url",
-// 				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
-// 			}
-// 		} else {
-// 			args = []string{
-// 				SSS_CODE,
-// 				"send-message",
-// 				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
-// 				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
-// 			}
-// 		}
-// 		t.Logf("Args: %v", args)
-// 		testApp := newTestApp(t)
+func TestNonListParameterDuplicateKey(t *testing.T) {
+	for i := 0; i < 3; i++ {
+		// given
+		var args []string
+		if i == 0 {
+			args = []string{
+				SSS_CODE,
+				"send-message",
+				"--queue-url",
+				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
+				"--queue-url",
+				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
+			}
+		} else if i == 1 {
+			args = []string{
+				SSS_CODE,
+				"send-message",
+				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
+				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
+			}
+		} else {
+			args = []string{
+				SSS_CODE,
+				"send-message",
+				"--queue-url",
+				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
+				"--debug",
+				"--debug",
+			}
+		}
+		t.Logf("Args: %v", args)
+		testApp := newTestApp(t)
 
-// 		// when
-// 		parsedOutput, err := testApp.parseStrings(args)
+		// when
+		parsedOutput, err := testApp.parseStrings(args)
 
-// 		// then
-// 		assertError(t, err, "invalid none collection type parameter: \"--queue-url\" was provided twice")
-// 		assertStringEquals(t, parsedOutput.helpMessage, "")
-// 	}
-// }
+		// then
+		if i == 2 {
+			assertError(t, err, "invalid parameter: \"--debug\" was provided twice")
+			assertStringEquals(t, parsedOutput.helpMessage, "")
+		} else {
+			assertError(t, err, "invalid parameter: \"--queue-url\" was provided twice")
+			assertStringEquals(t, parsedOutput.helpMessage, "")
+		}
+	}
+}
 
-func TestUnknownParameter(t *testing.T) {
+func TestUnknownParameterKey(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		// given
 		var args []string
@@ -231,7 +252,7 @@ func TestUnknownParameter(t *testing.T) {
 	}
 }
 
-func TestParameterUnknownValue(t *testing.T) {
+func TestUnknownParameterValue(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		// given
 		var args []string
@@ -273,7 +294,7 @@ func TestFlagParameterProvidedWithValue(t *testing.T) {
 			args = []string{
 				SSS_CODE,
 				"list-queues",
-				"-page-size",
+				"--page-size",
 				"10",
 				"--debug",
 				"some_value",
@@ -282,7 +303,7 @@ func TestFlagParameterProvidedWithValue(t *testing.T) {
 			args = []string{
 				SSS_CODE,
 				"list-queues",
-				"-page-size",
+				"--page-size=10",
 				"--debug=some_value",
 			}
 		}
@@ -293,7 +314,12 @@ func TestFlagParameterProvidedWithValue(t *testing.T) {
 		parsedOutput, err := testApp.parseStrings(args)
 
 		// then
-		assertError(t, err, "invalid parameter value: \"--debug\" flag parameter cannot have value")
-		assertStringEquals(t, parsedOutput.helpMessage, "")
+		if i == 0 {
+			assertError(t, err, "unknown value provided: \"some_value\"")
+			assertStringEquals(t, parsedOutput.helpMessage, "")
+		} else {
+			assertError(t, err, "invalid parameter value: \"--debug\" flag parameter cannot have value")
+			assertStringEquals(t, parsedOutput.helpMessage, "")
+		}
 	}
 }
