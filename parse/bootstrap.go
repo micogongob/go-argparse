@@ -5,7 +5,7 @@ import "fmt"
 const (
 	CODE_WHITELIST_REGEX = "^[A-Za-z0-9_-]*$"
 	CODE_MAX_CHAR_LENGTH = 15
-	LISTS_MAX_SIZE = 100
+	LISTS_MAX_SIZE       = 100
 )
 
 func NewCommand(input NewCommandInput) *Command {

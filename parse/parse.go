@@ -74,7 +74,7 @@ func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 
 	requiredParameters := command.requiredParameters()
 	if len(requiredParameters) > 0 {
-		return parseOutput{}, fmt.Errorf("missing required parameter/s: %v", parametersListToHelp(requiredParameters))
+		return parseOutput{}, fmt.Errorf("missing required parameter/s: \"%v\" was not provided", toValidationMsgFormat(requiredParameters))
 	}
 
 	// TODO invoke child command function, maybe add validation in bootstrap?

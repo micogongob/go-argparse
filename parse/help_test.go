@@ -154,7 +154,8 @@ func TestSssSendMessageHelp(t *testing.T) {
   usage: send-message [...parameters]
 
   parameters:
-    --queue-name -> the name of the SSS queue (required)
+    --queue-url -> the url of the SSS queue (required)
+    --debug     -> DEBUG logging. Flag (optional)
 `)
 	}
 }

@@ -55,7 +55,7 @@ func TestCommandCodeNotProvided(t *testing.T) {
 	assertError(t, err, "invalid command setup: Code is not provided")
 }
 
-func TestCommandCodeExceedsMax(t *testing.T) {
+func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	command := NewCommand(NewCommandInput{
 		Code: VeryLongLongCode,
@@ -100,7 +100,7 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 
 	// when
 	_, err := NewApp(NewAppInput{
-		Code: "App",
+		Code:     "App",
 		Commands: commands,
 	})
 
@@ -183,7 +183,7 @@ func TestChildCommandCodeNotProvided(t *testing.T) {
 	assertError(t, err, "invalid child command setup: \"s4.childCommands[*].Code\" is not provided")
 }
 
-func TestChildCommandCodeExceedsMax(t *testing.T) {
+func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	command := NewCommand(NewCommandInput{
 		Code: "s4",
@@ -313,7 +313,7 @@ func TestParameterCodeNotProvided(t *testing.T) {
 	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.parameters[*].Code\" is not provided")
 }
 
-func TestParameterCodeExceedsMax(t *testing.T) {
+func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	command := NewCommand(NewCommandInput{
 		Code: "s4",
@@ -351,7 +351,7 @@ func TestParametersAddedExceedMax(t *testing.T) {
 		})
 	}
 	command.AddChildCommand(AddChildCommandInput{
-		Code: "make-bucket",
+		Code:       "make-bucket",
 		Parameters: parameters,
 	})
 

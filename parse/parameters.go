@@ -15,7 +15,7 @@ func (command *ChildCommand) requiredParameters() []string {
 	return params
 }
 
-func parametersListToHelp(params []string) string {
+func toValidationMsgFormat(params []string) string {
 	s := []string{}
 	for _, v := range params {
 		s = append(s, fmt.Sprintf("--%v", v))

@@ -42,8 +42,14 @@ func newTestApp(t *testing.T) App {
 		Description: "Send string message to SSS queue",
 		Parameters: []Parameter{
 			NewCommandParameter(NewCommandParameterInput{
-				Code:        "queue-name",
-				Description: "the name of the SSS queue",
+				Code:        "queue-url",
+				Description: "the url of the SSS queue",
+			}),
+			NewCommandParameter(NewCommandParameterInput{
+				Code:        "debug",
+				Description: "DEBUG logging",
+				IsOptional:  true,
+				IsFlag:      true,
 			}),
 		},
 	})
