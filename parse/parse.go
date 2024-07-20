@@ -63,8 +63,7 @@ func (command *Command) parseStrings(args []string) (parseOutput, error) {
 
 func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 	if len(args) > 0 {
-		// NOTE: outlier since parameter does not have help
-		if commandMatchesArg(helpCommand.Code, helpCommand.aliases, args[0]) {
+		if commandMatchesArg(helpParameter.Code, helpParameter.aliases, args[0]) {
 			return parseOutput{
 				helpMessage: helpToString(command.Help()),
 			}, nil

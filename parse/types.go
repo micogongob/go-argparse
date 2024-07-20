@@ -26,6 +26,7 @@ type Parameter struct {
 	IsOptional  bool
 	IsNumber    bool
 	IsBoolean   bool
+	aliases     []string // NOTE: do not support for arg parsing, just for help
 }
 
 // TODO use as value for parameter values

@@ -46,6 +46,8 @@ func (app *App) validate() error {
 					parameterCodes[parameter.Code] = true
 				}
 			}
+
+			childCommand.Parameters = append(childCommand.Parameters, helpParameter)
 		}
 
 		command.Children = append(command.Children, helpChildCommand)

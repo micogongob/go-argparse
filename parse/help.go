@@ -17,6 +17,14 @@ var helpChildCommand = &ChildCommand{
 	aliases:     []string{"--help", "-h"},
 }
 
+var helpParameter = &Parameter{
+	Code:        "help",
+	Description: "Show help",
+	IsOptional:  true,
+	IsBoolean:   true,
+	aliases:     []string{"--help", "-h"},
+}
+
 func helpToString(help helpInfo) string {
 	var sb strings.Builder
 
@@ -35,9 +43,9 @@ func helpToString(help helpInfo) string {
 
 	codePadRightLength := greatestLengthCode(help.children)
 	for _, child := range help.children {
-		sb.WriteString(fmt.Sprintf("    %v -> %v\n", padRight(child.code, codePadRightLength), child.description))
+		paddedRight := padRight(child.code, codePadRightLength)
+		sb.WriteString(fmt.Sprintf("    %v -> %v\n", paddedRight, child.description))
 	}
-
 	return sb.String()
 }
 
@@ -167,18 +175,29 @@ func (hp *Parameter) Help() helpInfo {
 	}
 
 	var helpDescription strings.Builder
-	if hp.IsNumber {
-		helpDescription.WriteString(fmt.Sprintf("%v. Number", codeDescription))
-	} else if hp.IsBoolean {
-		helpDescription.WriteString(fmt.Sprintf("%v. Boolean", codeDescription))
+	if len(hp.aliases) > 0 {
+		withoutParamCodeAliases := []string{}
+		for _, alias := range hp.aliases {
+			if alias == fmt.Sprintf("--%v", hp.Code) {
+				withoutParamCodeAliases = append(withoutParamCodeAliases, hp.Code)
+			} else {
+				withoutParamCodeAliases = append(withoutParamCodeAliases, alias)
+			}
+		}
+		helpDescription.WriteString(fmt.Sprintf("%v. Alternatives: %v", codeDescription, strings.Join(withoutParamCodeAliases, ", ")))
 	} else {
-		helpDescription.WriteString(fmt.Sprintf("%v. String", codeDescription))
-	}
-
-	if hp.IsOptional {
-		helpDescription.WriteString(" (optional)")
-	} else {
-		helpDescription.WriteString(" (required)")
+		if hp.IsNumber {
+			helpDescription.WriteString(fmt.Sprintf("%v. Number", codeDescription))
+		} else if hp.IsBoolean {
+			helpDescription.WriteString(fmt.Sprintf("%v. Boolean", codeDescription))
+		} else {
+			helpDescription.WriteString(fmt.Sprintf("%v. String", codeDescription))
+		}
+		if hp.IsOptional {
+			helpDescription.WriteString(" (optional)")
+		} else {
+			helpDescription.WriteString(" (required)")
+		}
 	}
 
 	return helpInfo{

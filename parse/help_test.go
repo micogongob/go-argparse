@@ -107,7 +107,10 @@ func TestSssVersionHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Show SSS version
 
-  usage: version
+  usage: version [...parameters]
+
+  parameters:
+    --help -> Show help. Alternatives: help, -h
 `)
 	}
 }
@@ -132,6 +135,7 @@ func TestSssListQueuesHelp(t *testing.T) {
   parameters:
     --page-size -> pagination. Number (optional)
     --debug     -> DEBUG logging. Boolean (optional)
+    --help      -> Show help. Alternatives: help, -h
 `)
 	}
 }
@@ -153,9 +157,10 @@ func TestSssSendMessageHelp(t *testing.T) {
 
   usage: send-message [...parameters]
 
-parameters:
+  parameters:
     --queue-url -> the url of the SSS queue. String (required)
     --debug     -> DEBUG logging. Boolean (optional)
+    --help      -> Show help. Alternatives: help, -h
 `)
 	}
 }
