@@ -275,3 +275,71 @@ func TestBooleanParameterProvidedWithValue(t *testing.T) {
 		}
 	}
 }
+
+func TestNoRequiredParameter(t *testing.T) {
+	// given
+	args := []string{SSS_CODE, "list-queues"}
+	t.Logf("Args: %v", args)
+	testApp := newTestApp(t)
+
+	// when
+	_, err := testApp.parseStrings(args)
+
+	// then
+	assertNilError(t, err)
+}
+
+func TestNoParameters(t *testing.T) {
+	// given
+	args := []string{SSS_CODE, "version"}
+	t.Logf("Args: %v", args)
+	testApp := newTestApp(t)
+
+	// when
+	_, err := testApp.parseStrings(args)
+
+	// then
+	assertNilError(t, err)
+}
+
+func TestNumberParameterNotNumeric(t *testing.T) {
+	for i := 0; i < 2; i++ {
+		// given
+		var args []string
+		if i == 0 {
+			args = []string{SSS_CODE, "list-queues", "--page-size", "ONE"}
+		} else {
+			args = []string{SSS_CODE, "list-queues", "--page-size=TWO"}
+		}
+		t.Logf("Args: %v", args)
+		testApp := newTestApp(t)
+
+		// when
+		parsedOutput, err := testApp.parseStrings(args)
+
+		// then
+		assertError(t, err, "invalid parameter value: \"--page-size\" expected numeric value")
+		assertStringEquals(t, parsedOutput.helpMessage, "")
+	}
+}
+
+func TestNumberParameterExceedsMax(t *testing.T) {
+	for i := 0; i < 2; i++ {
+		// given
+		var args []string
+		if i == 0 {
+			args = []string{SSS_CODE, "list-queues", "--page-size", "2147483648"}
+		} else {
+			args = []string{SSS_CODE, "list-queues", "--page-size=2147483648"}
+		}
+		t.Logf("Args: %v", args)
+		testApp := newTestApp(t)
+
+		// when
+		parsedOutput, err := testApp.parseStrings(args)
+
+		// then
+		assertError(t, err, "invalid parameter value: \"--page-size\" exceeds max number of 2147483647")
+		assertStringEquals(t, parsedOutput.helpMessage, "")
+	}
+}

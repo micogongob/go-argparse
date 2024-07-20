@@ -2,6 +2,7 @@ package parse
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -24,12 +25,13 @@ func (command *ChildCommand) parseParameterValues(args []string) error {
 	if err != nil {
 		return err
 	}
-	if err := validateParameterValues(parameterValues); err != nil {
+	finalParameterValues, err := validateParameterValues(command.Parameters, parameterValues)
+	if err != nil {
 		return err
 	}
 
 	// TODO return to on trigger
-	fmt.Println(parameterValues)
+	fmt.Println(finalParameterValues)
 	return nil
 }
 
@@ -93,8 +95,7 @@ func filterParameterValues(parameters []*Parameter, args []string) (map[string]s
 				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
 					return map[string]string{}, err
 				}
-				// TODO improve types of parameterValues
-				parameterValues[param.Code] = "1"
+				parameterValues[param.Code] = "any"
 				argFoundParamMatch = true
 				break
 			}
@@ -170,15 +171,47 @@ func truncateForError(longString string) string {
 	return fmt.Sprintf("%s...", longString[:TRUNCATE_LIMIT-3])
 }
 
-func validateParameterValues(parameterValues map[string]string) error {
-	PARAMETER_MAX_SIZE := 1000
-	for key, value := range parameterValues {
-		if strings.ReplaceAll(value, " ", "") == "" {
-			return fmt.Errorf("missing parameter value: \"--%v\" was not provided", key)
-		}
-		if len(value) > PARAMETER_MAX_SIZE {
-			return fmt.Errorf("invalid parameter value: \"--%v\" exceeds max of %d", key, PARAMETER_MAX_SIZE)
+func validateParameterValues(parameters []*Parameter, parameterValues map[string]string) (map[string]ParameterValue, error) {
+	PARAMETER_MAX_CHAR_LENGTH := 1000
+	PARAMETER_MAX_NUMBER_VALUE := 2147483647
+
+	finalParameterValues := map[string]ParameterValue{}
+	for _, param := range parameters {
+		value, ok := parameterValues[param.Code]
+		if ok {
+			if !param.IsBoolean {
+				if strings.ReplaceAll(value, " ", "") == "" {
+					return map[string]ParameterValue{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.Code)
+				}
+			}
+			if param.IsNumber {
+				asNumber, err := strconv.Atoi(value)
+				if err != nil {
+					return map[string]ParameterValue{}, fmt.Errorf("invalid parameter value: \"--%v\" expected numeric value", param.Code)
+				}
+				if asNumber > PARAMETER_MAX_NUMBER_VALUE {
+					return map[string]ParameterValue{}, fmt.Errorf("invalid parameter value: \"--%v\" exceeds max number of %d", param.Code, PARAMETER_MAX_NUMBER_VALUE)
+				}
+				finalParameterValues[param.Code] = ParameterValue{
+					NumberValue: asNumber,
+				}
+			} else if param.IsBoolean {
+				finalParameterValues[param.Code] = ParameterValue{
+					BooleanValue: true,
+				}
+			} else {
+				if len(value) > PARAMETER_MAX_CHAR_LENGTH {
+					return map[string]ParameterValue{}, fmt.Errorf("invalid parameter value: \"--%v\" exceeds max of %d", param.Code, PARAMETER_MAX_CHAR_LENGTH)
+				}
+				finalParameterValues[param.Code] = ParameterValue{
+					StringValue: value,
+				}
+			}
+		} else if !ok && param.IsBoolean {
+			finalParameterValues[param.Code] = ParameterValue{
+				BooleanValue: false,
+			}
 		}
 	}
-	return nil
+	return finalParameterValues, nil
 }

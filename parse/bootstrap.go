@@ -105,5 +105,8 @@ func validateParameter(command *Command, childCommand *ChildCommand, parameter *
 	if !parameter.IsOptional && parameter.IsBoolean {
 		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" cannot be required and a boolean at the same time", command.Code, childCommand.Code, parameter.Code)
 	}
+	if parameter.IsNumber && parameter.IsBoolean {
+		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" cannot be a number and a boolean at the same time", command.Code, childCommand.Code, parameter.Code)
+	}
 	return nil
 }

@@ -509,29 +509,39 @@ func TestCommandWithoutChildCommand(t *testing.T) {
 
 func TestParameterMultipleTypeDefined(t *testing.T) {
 	// given
-	app := App{
-		Code: "App",
-		Commands: []*Command{
-			{
-				Code: "s4",
-				Children: []*ChildCommand{
-					{
-						Code: "make-bucket",
-						Parameters: []*Parameter{
-							{
-								Code:      "bucket-name",
-								IsBoolean: true,
+	parameters := []*Parameter{
+		{
+			Code:       "bucket-name",
+			IsOptional: true,
+			IsBoolean:  true,
+			IsNumber:   true,
+		},
+	}
+	errorMsgs := []string{
+		"invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be a number and a boolean at the same time",
+	}
+	for i := 0; i < len(parameters); i++ {
+		app := App{
+			Code: "App",
+			Commands: []*Command{
+				{
+					Code: "s4",
+					Children: []*ChildCommand{
+						{
+							Code: "make-bucket",
+							Parameters: []*Parameter{
+								parameters[i],
 							},
 						},
 					},
 				},
 			},
-		},
+		}
+
+		// when
+		err := app.validate()
+
+		// then
+		assertError(t, err, errorMsgs[i])
 	}
-
-	// when
-	err := app.validate()
-
-	// then
-	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be required and a boolean at the same time")
 }
