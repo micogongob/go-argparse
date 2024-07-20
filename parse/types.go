@@ -23,8 +23,9 @@ type ChildCommand struct {
 type Parameter struct {
 	Code        string
 	Description string
-	Optional    bool
-	Flag        bool
+	IsOptional  bool
+	IsNumber    bool
+	IsBoolean   bool
 }
 
 // TODO use as value for parameter values

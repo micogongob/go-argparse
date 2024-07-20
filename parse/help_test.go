@@ -130,8 +130,8 @@ func TestSssListQueuesHelp(t *testing.T) {
   usage: list-queues [...Parameters]
 
   parameters:
-    --page-size -> pagination (optional)
-    --debug     -> DEBUG logging. Flag (optional)
+    --page-size -> pagination. Number (optional)
+    --debug     -> DEBUG logging. Boolean (optional)
 `)
 	}
 }
@@ -153,9 +153,9 @@ func TestSssSendMessageHelp(t *testing.T) {
 
   usage: send-message [...Parameters]
 
-  parameters:
-    --queue-url -> the url of the SSS queue (required)
-    --debug     -> DEBUG logging. Flag (optional)
+parameters:
+    --queue-url -> the url of the SSS queue. String (required)
+    --debug     -> DEBUG logging. Boolean (optional)
 `)
 	}
 }

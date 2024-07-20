@@ -32,13 +32,14 @@ func newTestApp(t *testing.T) App {
 							{
 								Code:        "page-size",
 								Description: "pagination",
-								Optional:    true,
+								IsOptional:  true,
+								IsNumber:    true,
 							},
 							{
 								Code:        "debug",
 								Description: "DEBUG logging",
-								Optional:    true,
-								Flag:        true,
+								IsOptional:  true,
+								IsBoolean:   true,
 							},
 						},
 					},
@@ -53,8 +54,8 @@ func newTestApp(t *testing.T) App {
 							{
 								Code:        "debug",
 								Description: "DEBUG logging",
-								Optional:    true,
-								Flag:        true,
+								IsOptional:  true,
+								IsBoolean:   true,
 							},
 						},
 					},

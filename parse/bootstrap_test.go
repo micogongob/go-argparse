@@ -458,7 +458,7 @@ func TestParameterDuplicateCode(t *testing.T) {
 	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" is provided more than once")
 }
 
-func TestRequiredParameterButFlag(t *testing.T) {
+func TestRequiredParameterButBoolean(t *testing.T) {
 	// given
 	app := App{
 		Code: "App",
@@ -470,8 +470,8 @@ func TestRequiredParameterButFlag(t *testing.T) {
 						Code: "make-bucket",
 						Parameters: []*Parameter{
 							{
-								Code: "bucket-name",
-								Flag: true,
+								Code:      "bucket-name",
+								IsBoolean: true,
 							},
 						},
 					},
@@ -484,7 +484,7 @@ func TestRequiredParameterButFlag(t *testing.T) {
 	err := app.validate()
 
 	// then
-	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be required and a flag at the same time")
+	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be required and a boolean at the same time")
 }
 
 func TestCommandWithoutChildCommand(t *testing.T) {
@@ -505,4 +505,33 @@ func TestCommandWithoutChildCommand(t *testing.T) {
 
 	// then
 	assertError(t, err, "invalid command setup: \"test\" should have atleast one child command")
+}
+
+func TestParameterMultipleTypeDefined(t *testing.T) {
+	// given
+	app := App{
+		Code: "App",
+		Commands: []*Command{
+			{
+				Code: "s4",
+				Children: []*ChildCommand{
+					{
+						Code: "make-bucket",
+						Parameters: []*Parameter{
+							{
+								Code:      "bucket-name",
+								IsBoolean: true,
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	// when
+	err := app.validate()
+
+	// then
+	assertError(t, err, "invalid parameter setup: \"s4.make-bucket.bucket-name\" cannot be required and a boolean at the same time")
 }

@@ -129,13 +129,15 @@ func (hp *ChildCommand) Help() helpInfo {
 func (hp *Parameter) Help() helpInfo {
 	var description strings.Builder
 
-	if hp.Flag {
-		description.WriteString(fmt.Sprintf("%v. Flag", hp.Description))
+	if hp.IsNumber {
+		description.WriteString(fmt.Sprintf("%v. Number", hp.Description))
+	} else if hp.IsBoolean {
+		description.WriteString(fmt.Sprintf("%v. Boolean", hp.Description))
 	} else {
-		description.WriteString(hp.Description)
+		description.WriteString(fmt.Sprintf("%v. String", hp.Description))
 	}
 
-	if hp.Optional {
+	if hp.IsOptional {
 		description.WriteString(" (optional)")
 	} else {
 		description.WriteString(" (required)")

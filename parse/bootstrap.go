@@ -100,8 +100,8 @@ func validateParameter(command *Command, childCommand *ChildCommand, parameter *
 	if !matchesRegex(parameter.Code, CODE_WHITELIST_REGEX_PATTERN) {
 		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" has invalid characters [A-Za-z0-9_-]", command.Code, childCommand.Code, parameter.Code)
 	}
-	if !parameter.Optional && parameter.Flag {
-		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" cannot be required and a flag at the same time", command.Code, childCommand.Code, parameter.Code)
+	if !parameter.IsOptional && parameter.IsBoolean {
+		return fmt.Errorf("invalid parameter setup: \"%v.%v.%v\" cannot be required and a boolean at the same time", command.Code, childCommand.Code, parameter.Code)
 	}
 	return nil
 }

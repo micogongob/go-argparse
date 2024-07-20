@@ -238,7 +238,7 @@ func TestUnknownParameterValue(t *testing.T) {
 	}
 }
 
-func TestFlagParameterProvidedWithValue(t *testing.T) {
+func TestBooleanParameterProvidedWithValue(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		// given
 		var args []string
@@ -270,7 +270,7 @@ func TestFlagParameterProvidedWithValue(t *testing.T) {
 			assertError(t, err, "unknown value provided: \"some_value\"")
 			assertStringEquals(t, parsedOutput.helpMessage, "")
 		} else {
-			assertError(t, err, "invalid parameter value: \"--debug\" flag parameter cannot have value")
+			assertError(t, err, "invalid parameter value: \"--debug\" boolean parameter cannot have value")
 			assertStringEquals(t, parsedOutput.helpMessage, "")
 		}
 	}

@@ -8,7 +8,7 @@ import (
 func (command *ChildCommand) requiredParameters() []*Parameter {
 	params := []*Parameter{}
 	for _, param := range command.Parameters {
-		if !param.Optional {
+		if !param.IsOptional {
 			params = append(params, param)
 		}
 	}
@@ -86,9 +86,9 @@ func filterParameterValues(parameters []*Parameter, args []string) (map[string]s
 				continue
 			}
 
-			if param.Flag {
+			if param.IsBoolean {
 				if usingEqualsAssignment, _ := getEqualAssigntmentValues(rawArgValue); usingEqualsAssignment {
-					return map[string]string{}, fmt.Errorf("invalid parameter value: \"--%v\" flag parameter cannot have value", param.Code)
+					return map[string]string{}, fmt.Errorf("invalid parameter value: \"--%v\" boolean parameter cannot have value", param.Code)
 				}
 				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
 					return map[string]string{}, err
