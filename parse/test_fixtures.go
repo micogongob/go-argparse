@@ -103,3 +103,9 @@ func assertStringEquals(t *testing.T, actual, expected string) {
 		t.Errorf("Strings does not match\nactual:\n%v\nexpected:\n%v", actual, expected)
 	}
 }
+
+func assertNumberEquals(t *testing.T, actual, expected int) {
+	if actual != expected {
+		t.Errorf("Numbers does not match\nactual:\n%v\nexpected:\n%v", actual, expected)
+	}
+}
