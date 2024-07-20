@@ -63,12 +63,12 @@ func (command *Command) parseStrings(args []string) (parseOutput, error) {
 
 func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 	if len(args) > 0 {
-		if commandMatchesArg(helpParameter.Code, helpParameter.aliases, args[0]) {
+		if len(args) == 1 && commandMatchesArg(helpParameter.Code, helpParameter.aliases, args[0]) {
 			return parseOutput{
 				helpMessage: helpToString(command.Help()),
 			}, nil
 		}
-		err := command.parseParameterValues(args)
+		err := command.extractParameterValues(args)
 		return parseOutput{}, err
 	}
 

@@ -16,16 +16,19 @@ func (command *ChildCommand) requiredParameters() []*Parameter {
 	return params
 }
 
-func (command *ChildCommand) parseParameterValues(args []string) error {
+func (command *ChildCommand) extractParameterValues(args []string) error {
+	if err := validateNoHelpExists(args); err != nil {
+		return err
+	}
 	requiredParameters := command.requiredParameters()
 	if err := validateRequiredParameters(requiredParameters, args); err != nil {
 		return err
 	}
-	parameterValues, err := filterParameterValues(command.Parameters, args)
+	stringValues, err := filterStringValues(command.Parameters, args)
 	if err != nil {
 		return err
 	}
-	finalParameterValues, err := validateParameterValues(command.Parameters, parameterValues)
+	finalParameterValues, err := getValidParameterValues(command.Parameters, stringValues)
 	if err != nil {
 		return err
 	}
@@ -75,8 +78,17 @@ func validateRequiredParameters(parameters []*Parameter, args []string) error {
 	return nil
 }
 
-func filterParameterValues(parameters []*Parameter, args []string) (map[string]string, error) {
-	parameterValues := map[string]string{}
+func validateNoHelpExists(args []string) error {
+	for _, arg := range args {
+		if commandMatchesArg(helpParameter.Code, helpParameter.aliases, arg) {
+			return fmt.Errorf("invalid parameter value: \"%v\" can't be used here", arg)
+		}
+	}
+	return nil
+}
+
+func filterStringValues(parameters []*Parameter, args []string) (map[string]string, error) {
+	stringValues := map[string]string{}
 
 	for i := 0; i < len(args); i++ {
 		rawArgValue := args[i]
@@ -92,19 +104,19 @@ func filterParameterValues(parameters []*Parameter, args []string) (map[string]s
 				if usingEqualsAssignment, _ := getEqualAssigntmentValues(rawArgValue); usingEqualsAssignment {
 					return map[string]string{}, fmt.Errorf("invalid parameter value: \"--%v\" boolean parameter cannot have value", param.Code)
 				}
-				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
+				if err := validateIfStringValueAlreadyExists(&stringValues, *param); err != nil {
 					return map[string]string{}, err
 				}
-				parameterValues[param.Code] = "any"
+				stringValues[param.Code] = "any"
 				argFoundParamMatch = true
 				break
 			}
 			if usingEqualsAssignment {
-				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
+				if err := validateIfStringValueAlreadyExists(&stringValues, *param); err != nil {
 					return map[string]string{}, err
 				}
 				_, values := getEqualAssigntmentValues(rawArgValue)
-				parameterValues[param.Code] = values[1]
+				stringValues[param.Code] = values[1]
 				argFoundParamMatch = true
 				break
 			} else {
@@ -118,10 +130,10 @@ func filterParameterValues(parameters []*Parameter, args []string) (map[string]s
 					return map[string]string{}, fmt.Errorf("missing parameter value: \"--%v\" was not provided", param.Code)
 				}
 
-				if err := validateIfNewParameterValue(&parameterValues, *param); err != nil {
+				if err := validateIfStringValueAlreadyExists(&stringValues, *param); err != nil {
 					return map[string]string{}, err
 				}
-				parameterValues[param.Code] = nextArgValue
+				stringValues[param.Code] = nextArgValue
 				i++
 				argFoundParamMatch = true
 				break
@@ -141,11 +153,11 @@ func filterParameterValues(parameters []*Parameter, args []string) (map[string]s
 			}
 		}
 	}
-	return parameterValues, nil
+	return stringValues, nil
 }
 
-func validateIfNewParameterValue(parameterValues *map[string]string, param Parameter) error {
-	if _, ok := (*parameterValues)[param.Code]; ok {
+func validateIfStringValueAlreadyExists(stringValues *map[string]string, param Parameter) error {
+	if _, ok := (*stringValues)[param.Code]; ok {
 		return fmt.Errorf("invalid parameter: \"--%v\" was provided twice", param.Code)
 	}
 	return nil
@@ -171,13 +183,13 @@ func truncateForError(longString string) string {
 	return fmt.Sprintf("%s...", longString[:TRUNCATE_LIMIT-3])
 }
 
-func validateParameterValues(parameters []*Parameter, parameterValues map[string]string) (map[string]ParameterValue, error) {
+func getValidParameterValues(parameters []*Parameter, stringValues map[string]string) (map[string]ParameterValue, error) {
 	PARAMETER_MAX_CHAR_LENGTH := 1000
 	PARAMETER_MAX_NUMBER_VALUE := 2147483647
 
 	finalParameterValues := map[string]ParameterValue{}
 	for _, param := range parameters {
-		value, ok := parameterValues[param.Code]
+		value, ok := stringValues[param.Code]
 		if ok {
 			if !param.IsBoolean {
 				if strings.ReplaceAll(value, " ", "") == "" {

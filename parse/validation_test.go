@@ -343,3 +343,26 @@ func TestNumberParameterExceedsMax(t *testing.T) {
 		assertStringEquals(t, parsedOutput.helpMessage, "")
 	}
 }
+
+func TestParameterContainsHelp(t *testing.T) {
+	for _, helpAlias := range HelpCommandAliases {
+		pageSizes := [][]string{
+			{"--page-size", "10"},
+			{"--page-siz=10"},
+		}
+		for _, pageSize := range pageSizes {
+			// given
+			args := []string{SSS_CODE, "list-queues", helpAlias}
+			args = append(args, pageSize...)
+			t.Logf("Args: %v", args)
+			testApp := newTestApp(t)
+
+			// when
+			parsedOutput, err := testApp.parseStrings(args)
+
+			// then
+			assertError(t, err, fmt.Sprintf("invalid parameter value: \"%v\" can't be used here", helpAlias))
+			assertStringEquals(t, parsedOutput.helpMessage, "")
+		}
+	}
+}
