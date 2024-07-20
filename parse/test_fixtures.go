@@ -3,31 +3,38 @@ package parse
 import "testing"
 
 const (
-	APP_CODE = "ows"
-	APP_DESC = "Owsome cli"
-	SSS_CODE = "sss"
-	S4_CODE  = "s4"
+	APP_CODE         = "ows"
+	APP_DESC         = "Owsome cli"
+	SSS_COMMAND      = "sss"
+	SSS_LIST_QUEUES  = "list-queues"
+	SSS_SEND_MESSAGE = "send-message"
+	S4_COMMAND       = "s4"
+	S4_MAKE_BUCKET   = "make-bucket"
+	S4_BUCKET_NAME   = "bucket-name"
+	S4_COPY_OBJECTS  = "copy-objects"
 )
 
 var HelpCommandAliases = []string{"help", "--help", "-h"}
 
-func newTestApp(t *testing.T) App {
+func newOwsApp(t *testing.T) App {
 	app := App{
 		Code:        APP_CODE,
 		Description: APP_DESC,
 		Commands: []*Command{
 			{
-				Code:        SSS_CODE,
+				Code:        SSS_COMMAND,
 				Description: "SSS Queue Operations",
 				Children: []*ChildCommand{
 					{
-						Code:        "version",
-						Description: "Show SSS version",
+						Code:           "version",
+						Description:    "Show SSS version",
+						CommandHandler: noopCommandHandler,
 					},
 					{
 
-						Code:        "list-queues",
-						Description: "Lists SSS queues",
+						Code:           SSS_LIST_QUEUES,
+						Description:    "Lists SSS queues",
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
 								Code:        "page-size",
@@ -44,8 +51,9 @@ func newTestApp(t *testing.T) App {
 						},
 					},
 					{
-						Code:        "send-message",
-						Description: "Send string message to SSS queue",
+						Code:           SSS_SEND_MESSAGE,
+						Description:    "Send string message to SSS queue",
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
 								Code:        "queue-url",
@@ -62,16 +70,18 @@ func newTestApp(t *testing.T) App {
 				},
 			},
 			{
-				Code:        S4_CODE,
+				Code:        S4_COMMAND,
 				Description: "S4 Bucket Operations",
 				Children: []*ChildCommand{
 					{
-						Code:        "make-bucket",
-						Description: "Create S4 bucket",
+						Code:           S4_MAKE_BUCKET,
+						Description:    "Create S4 bucket",
+						CommandHandler: noopCommandHandler,
 					},
 					{
-						Code:        "copy-objects",
-						Description: "Copies object between s4 buckets",
+						Code:           S4_COPY_OBJECTS,
+						Description:    "Copies object between s4 buckets",
+						CommandHandler: noopCommandHandler,
 					},
 				},
 			},
@@ -81,6 +91,25 @@ func newTestApp(t *testing.T) App {
 	err := app.validate()
 
 	assertNilError(t, err)
+	return app
+}
+
+func noopCommandHandler(values map[string]ParameterValue) error {
+	return nil
+}
+
+func newOwsAppWithCommandHandler(t *testing.T, childCommandCode string, commandHandler func(map[string]ParameterValue) error) App {
+	app := newOwsApp(t)
+	for i, command := range app.Commands {
+
+		for j, childCommand := range command.Children {
+			if childCommand.Code == childCommandCode {
+				app.Commands[i].Children[j].CommandHandler = commandHandler
+				return app
+			}
+		}
+	}
+	t.Errorf("childCommandCode=%v is not found", childCommandCode)
 	return app
 }
 

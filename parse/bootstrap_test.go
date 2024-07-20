@@ -39,12 +39,13 @@ var ListsMaxSize = 101
 func TestCommandCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
 				Children: []*ChildCommand{
 					{
-						Code: "s4",
+						Code:           S4_COMMAND,
+						CommandHandler: noopCommandHandler,
 					},
 				},
 			},
@@ -61,16 +62,17 @@ func TestCommandCodeNotProvided(t *testing.T) {
 func TestCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
 				Code: VeryLongLongCode,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
-								Code: "bucket-name",
+								Code: S4_BUCKET_NAME,
 							},
 						},
 					},
@@ -94,10 +96,11 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 			Code: fmt.Sprintf("s%d", i),
 			Children: []*ChildCommand{
 				{
-					Code: "make-bucket",
+					Code:           S4_MAKE_BUCKET,
+					CommandHandler: noopCommandHandler,
 					Parameters: []*Parameter{
 						{
-							Code: "bucket-name",
+							Code: S4_BUCKET_NAME,
 						},
 					},
 				},
@@ -105,7 +108,7 @@ func TestCommandsAddedExceedMax(t *testing.T) {
 		}
 	}
 	app := App{
-		Code:     "App",
+		Code:     APP_CODE,
 		Commands: commands,
 	}
 
@@ -120,16 +123,17 @@ func TestCommandInvalidCodeInput(t *testing.T) {
 	for _, code := range InvalidCodes {
 		// given
 		app := App{
-			Code: "App",
+			Code: APP_CODE,
 			Commands: []*Command{
 				{
 					Code: code,
 					Children: []*ChildCommand{
 						{
-							Code: "make-bucket",
+							Code:           S4_MAKE_BUCKET,
+							CommandHandler: noopCommandHandler,
 							Parameters: []*Parameter{
 								{
-									Code: "bucket-name",
+									Code: S4_BUCKET_NAME,
 								},
 							},
 						},
@@ -149,21 +153,22 @@ func TestCommandInvalidCodeInput(t *testing.T) {
 func TestCommandDuplicateCode(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 					},
 				},
 			},
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code: S4_MAKE_BUCKET,
 					},
 				},
 			},
@@ -180,10 +185,10 @@ func TestCommandDuplicateCode(t *testing.T) {
 func TestChildCommandCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{},
 				},
@@ -201,16 +206,17 @@ func TestChildCommandCodeNotProvided(t *testing.T) {
 func TestChildCommandCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: VeryLongLongCode,
+						Code:           VeryLongLongCode,
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
-								Code: "bucket-name",
+								Code: S4_BUCKET_NAME,
 							},
 						},
 					},
@@ -231,19 +237,20 @@ func TestChildCommandsAddedExceedMax(t *testing.T) {
 	children := make([]*ChildCommand, ListsMaxSize)
 	for i := 0; i < ListsMaxSize; i++ {
 		children[i] = &ChildCommand{
-			Code: fmt.Sprintf("make-bucket-v%d", i),
+			Code:           fmt.Sprintf("make-bucket-v%d", i),
+			CommandHandler: noopCommandHandler,
 			Parameters: []*Parameter{
 				{
-					Code: "bucket-name",
+					Code: S4_BUCKET_NAME,
 				},
 			},
 		}
 	}
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code:     "s4",
+				Code:     S4_COMMAND,
 				Children: children,
 			},
 		},
@@ -260,16 +267,17 @@ func TestChildCommandInvalidCodeInput(t *testing.T) {
 	for _, code := range InvalidCodes {
 		// given
 		app := App{
-			Code: "App",
+			Code: APP_CODE,
 			Commands: []*Command{
 				{
-					Code: "s4",
+					Code: S4_COMMAND,
 					Children: []*ChildCommand{
 						{
-							Code: code,
+							Code:           code,
+							CommandHandler: noopCommandHandler,
 							Parameters: []*Parameter{
 								{
-									Code: "bucket-name",
+									Code: S4_BUCKET_NAME,
 								},
 							},
 						},
@@ -289,16 +297,18 @@ func TestChildCommandInvalidCodeInput(t *testing.T) {
 func TestChildCommandDuplicateCode(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 					},
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 					},
 				},
 			},
@@ -315,13 +325,14 @@ func TestChildCommandDuplicateCode(t *testing.T) {
 func TestParameterCodeNotProvided(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{},
 						},
@@ -341,13 +352,14 @@ func TestParameterCodeNotProvided(t *testing.T) {
 func TestParameterCodeCharLengthExceedsMax(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
 								Code: VeryLongLongCode,
@@ -376,14 +388,15 @@ func TestParametersAddedExceedMax(t *testing.T) {
 	}
 
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code:       "make-bucket",
-						Parameters: parameters,
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
+						Parameters:     parameters,
 					},
 				},
 			},
@@ -401,13 +414,14 @@ func TestParameterInvalidCodeInput(t *testing.T) {
 	for _, code := range InvalidCodes {
 		// given
 		app := App{
-			Code: "App",
+			Code: APP_CODE,
 			Commands: []*Command{
 				{
-					Code: "s4",
+					Code: S4_COMMAND,
 					Children: []*ChildCommand{
 						{
-							Code: "make-bucket",
+							Code:           S4_MAKE_BUCKET,
+							CommandHandler: noopCommandHandler,
 							Parameters: []*Parameter{
 								{
 									Code: code,
@@ -430,19 +444,20 @@ func TestParameterInvalidCodeInput(t *testing.T) {
 func TestParameterDuplicateCode(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
-								Code: "bucket-name",
+								Code: S4_BUCKET_NAME,
 							},
 							{
-								Code: "bucket-name",
+								Code: S4_BUCKET_NAME,
 							},
 						},
 					},
@@ -461,16 +476,17 @@ func TestParameterDuplicateCode(t *testing.T) {
 func TestRequiredParameterButBoolean(t *testing.T) {
 	// given
 	app := App{
-		Code: "App",
+		Code: APP_CODE,
 		Commands: []*Command{
 			{
-				Code: "s4",
+				Code: S4_COMMAND,
 				Children: []*ChildCommand{
 					{
-						Code: "make-bucket",
+						Code:           S4_MAKE_BUCKET,
+						CommandHandler: noopCommandHandler,
 						Parameters: []*Parameter{
 							{
-								Code:      "bucket-name",
+								Code:      S4_BUCKET_NAME,
 								IsBoolean: true,
 							},
 						},
@@ -511,7 +527,7 @@ func TestParameterMultipleTypeDefined(t *testing.T) {
 	// given
 	parameters := []*Parameter{
 		{
-			Code:       "bucket-name",
+			Code:       S4_BUCKET_NAME,
 			IsOptional: true,
 			IsBoolean:  true,
 			IsNumber:   true,
@@ -522,13 +538,14 @@ func TestParameterMultipleTypeDefined(t *testing.T) {
 	}
 	for i := 0; i < len(parameters); i++ {
 		app := App{
-			Code: "App",
+			Code: APP_CODE,
 			Commands: []*Command{
 				{
-					Code: "s4",
+					Code: S4_COMMAND,
 					Children: []*ChildCommand{
 						{
-							Code: "make-bucket",
+							Code:           S4_MAKE_BUCKET,
+							CommandHandler: noopCommandHandler,
 							Parameters: []*Parameter{
 								parameters[i],
 							},
@@ -544,4 +561,27 @@ func TestParameterMultipleTypeDefined(t *testing.T) {
 		// then
 		assertError(t, err, errorMsgs[i])
 	}
+}
+
+func TestÇhildCommandNoHandler(t *testing.T) {
+	// given
+	app := App{
+		Code: APP_CODE,
+		Commands: []*Command{
+			{
+				Code: S4_COMMAND,
+				Children: []*ChildCommand{
+					{
+						Code: S4_MAKE_BUCKET,
+					},
+				},
+			},
+		},
+	}
+
+	// when
+	err := app.validate()
+
+	// then
+	assertError(t, err, "invalid child command setup: \"s4.make-bucket.CommandHandler\" is not provided")
 }

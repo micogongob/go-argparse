@@ -89,6 +89,9 @@ func validateChildCommand(command *Command, childCommand *ChildCommand) error {
 	if len(childCommand.Parameters) > LISTS_MAX_SIZE {
 		return fmt.Errorf("invalid parameter setup: \"%v.%v.Parameters\" added exceeds max size of %d", command.Code, childCommand.Code, LISTS_MAX_SIZE)
 	}
+	if childCommand.CommandHandler == nil {
+		return fmt.Errorf("invalid child command setup: \"%v.%v.CommandHandler\" is not provided", command.Code, childCommand.Code)
+	}
 	return nil
 }
 

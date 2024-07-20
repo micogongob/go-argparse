@@ -13,12 +13,12 @@ func TestRequiredParameterKeyNotProvided(t *testing.T) {
 		// given
 		var args []string
 		if i == 0 {
-			args = []string{SSS_CODE, "send-message"}
+			args = []string{SSS_COMMAND, SSS_SEND_MESSAGE}
 		} else {
-			args = []string{SSS_CODE, "send-message", "--debug"}
+			args = []string{SSS_COMMAND, SSS_SEND_MESSAGE, "--debug"}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -34,12 +34,12 @@ func TestRequiredParameterValueNotProvided(t *testing.T) {
 		// given
 		var args []string
 		if i == 0 {
-			args = []string{SSS_CODE, "send-message", "--queue-url"}
+			args = []string{SSS_COMMAND, SSS_SEND_MESSAGE, "--queue-url"}
 		} else {
-			args = []string{SSS_CODE, "send-message", "--queue-url="}
+			args = []string{SSS_COMMAND, SSS_SEND_MESSAGE, "--queue-url="}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -55,12 +55,12 @@ func TestOptionalParameterValueNotProvided(t *testing.T) {
 		// given
 		var args []string
 		if i == 0 {
-			args = []string{SSS_CODE, "list-queues", "--page-size"}
+			args = []string{SSS_COMMAND, SSS_LIST_QUEUES, "--page-size"}
 		} else {
-			args = []string{SSS_CODE, "list-queues", "--page-size="}
+			args = []string{SSS_COMMAND, SSS_LIST_QUEUES, "--page-size="}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -76,12 +76,12 @@ func TestParameterValueIsBlank(t *testing.T) {
 		// given
 		var args []string
 		if i == 0 {
-			args = []string{SSS_CODE, "send-message", "--queue-url", "   "}
+			args = []string{SSS_COMMAND, SSS_SEND_MESSAGE, "--queue-url", "   "}
 		} else {
-			args = []string{SSS_CODE, "send-message", "--queue-url=       "}
+			args = []string{SSS_COMMAND, SSS_SEND_MESSAGE, "--queue-url=       "}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -99,20 +99,20 @@ func TestParameterValueCharLengthExceedsMax(t *testing.T) {
 		var args []string
 		if i == 0 {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url",
 				VeryVeryLongParamValue,
 			}
 		} else {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				fmt.Sprintf("--queue-url=%v", VeryVeryLongParamValue),
 			}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -130,8 +130,8 @@ func TestNonListParameterDuplicateKey(t *testing.T) {
 		var args []string
 		if i == 0 {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url",
 				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--queue-url",
@@ -139,15 +139,15 @@ func TestNonListParameterDuplicateKey(t *testing.T) {
 			}
 		} else if i == 1 {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 			}
 		} else {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url",
 				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--debug",
@@ -155,7 +155,7 @@ func TestNonListParameterDuplicateKey(t *testing.T) {
 			}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -177,8 +177,8 @@ func TestUnknownParameterKey(t *testing.T) {
 		var args []string
 		if i == 0 {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url",
 				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--another-url",
@@ -186,14 +186,14 @@ func TestUnknownParameterKey(t *testing.T) {
 			}
 		} else {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--another-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 			}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -210,8 +210,8 @@ func TestUnknownParameterValue(t *testing.T) {
 		var args []string
 		if i == 0 {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url",
 				"https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--debug",
@@ -219,15 +219,15 @@ func TestUnknownParameterValue(t *testing.T) {
 			}
 		} else {
 			args = []string{
-				SSS_CODE,
-				"send-message",
+				SSS_COMMAND,
+				SSS_SEND_MESSAGE,
 				"--queue-url=https://sqs.us-east-1.amazonaws.com/00000000/TEST-account-created-queue",
 				"--debug",
 				"out_of_place",
 			}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -244,8 +244,8 @@ func TestBooleanParameterProvidedWithValue(t *testing.T) {
 		var args []string
 		if i == 0 {
 			args = []string{
-				SSS_CODE,
-				"list-queues",
+				SSS_COMMAND,
+				SSS_LIST_QUEUES,
 				"--page-size",
 				"10",
 				"--debug",
@@ -253,14 +253,14 @@ func TestBooleanParameterProvidedWithValue(t *testing.T) {
 			}
 		} else {
 			args = []string{
-				SSS_CODE,
-				"list-queues",
+				SSS_COMMAND,
+				SSS_LIST_QUEUES,
 				"--page-size=10",
 				"--debug=some_value",
 			}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -278,9 +278,9 @@ func TestBooleanParameterProvidedWithValue(t *testing.T) {
 
 func TestNoRequiredParameter(t *testing.T) {
 	// given
-	args := []string{SSS_CODE, "list-queues"}
+	args := []string{SSS_COMMAND, SSS_LIST_QUEUES}
 	t.Logf("Args: %v", args)
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	// when
 	_, err := testApp.parseStrings(args)
@@ -291,9 +291,9 @@ func TestNoRequiredParameter(t *testing.T) {
 
 func TestNoParameters(t *testing.T) {
 	// given
-	args := []string{SSS_CODE, "version"}
+	args := []string{SSS_COMMAND, "version"}
 	t.Logf("Args: %v", args)
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	// when
 	_, err := testApp.parseStrings(args)
@@ -307,12 +307,12 @@ func TestNumberParameterNotNumeric(t *testing.T) {
 		// given
 		var args []string
 		if i == 0 {
-			args = []string{SSS_CODE, "list-queues", "--page-size", "ONE"}
+			args = []string{SSS_COMMAND, SSS_LIST_QUEUES, "--page-size", "ONE"}
 		} else {
-			args = []string{SSS_CODE, "list-queues", "--page-size=TWO"}
+			args = []string{SSS_COMMAND, SSS_LIST_QUEUES, "--page-size=TWO"}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -328,12 +328,12 @@ func TestNumberParameterExceedsMax(t *testing.T) {
 		// given
 		var args []string
 		if i == 0 {
-			args = []string{SSS_CODE, "list-queues", "--page-size", "2147483648"}
+			args = []string{SSS_COMMAND, SSS_LIST_QUEUES, "--page-size", "2147483648"}
 		} else {
-			args = []string{SSS_CODE, "list-queues", "--page-size=2147483648"}
+			args = []string{SSS_COMMAND, SSS_LIST_QUEUES, "--page-size=2147483648"}
 		}
 		t.Logf("Args: %v", args)
-		testApp := newTestApp(t)
+		testApp := newOwsApp(t)
 
 		// when
 		parsedOutput, err := testApp.parseStrings(args)
@@ -352,10 +352,10 @@ func TestParameterContainsHelp(t *testing.T) {
 		}
 		for _, pageSize := range pageSizes {
 			// given
-			args := []string{SSS_CODE, "list-queues", helpAlias}
+			args := []string{SSS_COMMAND, SSS_LIST_QUEUES, helpAlias}
 			args = append(args, pageSize...)
 			t.Logf("Args: %v", args)
-			testApp := newTestApp(t)
+			testApp := newOwsApp(t)
 
 			// when
 			parsedOutput, err := testApp.parseStrings(args)

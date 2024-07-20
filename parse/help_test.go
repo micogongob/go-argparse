@@ -4,7 +4,7 @@ import "testing"
 
 func TestAppHelp(t *testing.T) {
 	// given
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
@@ -34,14 +34,14 @@ func TestAppHelp(t *testing.T) {
 
 func TestSssHelp(t *testing.T) {
 	// given
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
 		if i == len(HelpCommandAliases) {
-			args = []string{SSS_CODE}
+			args = []string{SSS_COMMAND}
 		} else {
-			args = []string{SSS_CODE, HelpCommandAliases[i]}
+			args = []string{SSS_COMMAND, HelpCommandAliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -65,14 +65,14 @@ func TestSssHelp(t *testing.T) {
 
 func TestS4Help(t *testing.T) {
 	// tiven
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	for i := 0; i <= len(HelpCommandAliases); i++ {
 		var args []string
 		if i == len(HelpCommandAliases) {
-			args = []string{S4_CODE}
+			args = []string{S4_COMMAND}
 		} else {
-			args = []string{S4_CODE, HelpCommandAliases[i]}
+			args = []string{S4_COMMAND, HelpCommandAliases[i]}
 		}
 		t.Logf("Args: %v", args)
 
@@ -94,10 +94,10 @@ func TestS4Help(t *testing.T) {
 
 func TestSssVersionHelp(t *testing.T) {
 	// given
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	for i := 0; i < len(HelpCommandAliases); i++ {
-		args := []string{SSS_CODE, "version", HelpCommandAliases[i]}
+		args := []string{SSS_COMMAND, "version", HelpCommandAliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -117,10 +117,10 @@ func TestSssVersionHelp(t *testing.T) {
 
 func TestSssListQueuesHelp(t *testing.T) {
 	// given
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	for i := 0; i < len(HelpCommandAliases); i++ {
-		args := []string{SSS_CODE, "list-queues", HelpCommandAliases[i]}
+		args := []string{SSS_COMMAND, SSS_LIST_QUEUES, HelpCommandAliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when
@@ -142,10 +142,10 @@ func TestSssListQueuesHelp(t *testing.T) {
 
 func TestSssSendMessageHelp(t *testing.T) {
 	// given
-	testApp := newTestApp(t)
+	testApp := newOwsApp(t)
 
 	for i := 0; i < len(HelpCommandAliases); i++ {
-		args := []string{SSS_CODE, "send-message", HelpCommandAliases[i]}
+		args := []string{SSS_COMMAND, SSS_SEND_MESSAGE, HelpCommandAliases[i]}
 		t.Logf("Args: %v", args)
 
 		// when

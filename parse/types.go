@@ -14,10 +14,11 @@ type Command struct {
 }
 
 type ChildCommand struct {
-	Code        string
-	Description string
-	aliases     []string
-	Parameters  []*Parameter
+	Code           string
+	Description    string
+	CommandHandler func(parameterValues map[string]ParameterValue) error
+	Parameters     []*Parameter
+	aliases        []string
 }
 
 type Parameter struct {

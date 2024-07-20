@@ -77,6 +77,5 @@ func (command *ChildCommand) parseStrings(args []string) (parseOutput, error) {
 		return parseOutput{}, fmt.Errorf("missing required parameter/s: \"%v\" was not provided", toValidationMsgFormat(requiredParameters))
 	}
 
-	// TODO invoke child command function
-	return parseOutput{}, nil
+	return parseOutput{}, command.processEmptyArgs()
 }

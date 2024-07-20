@@ -32,10 +32,19 @@ func (command *ChildCommand) extractParameterValues(args []string) error {
 	if err != nil {
 		return err
 	}
+	return command.CommandHandler(finalParameterValues)
+}
 
-	// TODO return to on trigger
-	fmt.Println(finalParameterValues)
-	return nil
+func (command *ChildCommand) processEmptyArgs() error {
+	booleanParameterValues := map[string]ParameterValue{}
+	for _, param := range command.Parameters {
+		if param.IsBoolean {
+			booleanParameterValues[param.Code] = ParameterValue{
+				BooleanValue: false,
+			}
+		}
+	}
+	return command.CommandHandler(booleanParameterValues)
 }
 
 func (parameter *Parameter) matchesArg(rawArgValue string) (bool, bool) {
