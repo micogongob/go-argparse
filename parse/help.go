@@ -67,6 +67,21 @@ func padRight(source string, padLength int) string {
 }
 
 func (hp *App) Help() helpInfo {
+	// TODO add unit tests
+	var helpCode string
+	if hp.Code == "" {
+		helpCode = "{this}"
+	} else {
+		helpCode = hp.Code
+	}
+
+	var helpDescription string
+	if hp.Description == "" {
+		helpDescription = "Cli tool"
+	} else {
+		helpDescription = hp.Description
+	}
+
 	children := make([]helpInfo, len(hp.Commands))
 
 	for k, v := range hp.Commands {
@@ -74,20 +89,28 @@ func (hp *App) Help() helpInfo {
 	}
 
 	return helpInfo{
-		code:         hp.Code,
-		description:  hp.Description,
-		usageSuffix:  "[command] [subcommand] [...Parameters]",
+		code:         helpCode,
+		description:  helpDescription,
+		usageSuffix:  "[command] [subcommand] [...parameters]",
 		childrenName: "commands",
 		children:     children,
 	}
 }
 
 func (hp *Command) Help() helpInfo {
-	var description string
-	if len(hp.aliases) <= 0 {
-		description = hp.Description
+	// TODO add unit tests
+	var codeDescription string
+	if hp.Description == "" {
+		codeDescription = fmt.Sprintf("%v actions", hp.Code)
 	} else {
-		description = fmt.Sprintf("%v. Alternatives: %v", hp.Description, strings.Join(hp.aliases, ", "))
+		codeDescription = hp.Description
+	}
+
+	var helpDescription string
+	if len(hp.aliases) <= 0 {
+		helpDescription = codeDescription
+	} else {
+		helpDescription = fmt.Sprintf("%v. Alternatives: %v", codeDescription, strings.Join(hp.aliases, ", "))
 	}
 
 	children := make([]helpInfo, len(hp.Children))
@@ -97,19 +120,27 @@ func (hp *Command) Help() helpInfo {
 
 	return helpInfo{
 		code:         hp.Code,
-		description:  description,
-		usageSuffix:  "[subcommand] [...Parameters]",
+		description:  helpDescription,
+		usageSuffix:  "[subcommand] [...parameters]",
 		childrenName: "subcommands",
 		children:     children,
 	}
 }
 
 func (hp *ChildCommand) Help() helpInfo {
-	var description string
-	if len(hp.aliases) <= 0 {
-		description = hp.Description
+	// TODO add unit tests
+	var codeDescription string
+	if hp.Description == "" {
+		codeDescription = fmt.Sprintf("Execute %v", hp.Code)
 	} else {
-		description = fmt.Sprintf("%v. Alternatives: %v", hp.Description, strings.Join(hp.aliases, ", "))
+		codeDescription = hp.Description
+	}
+
+	var helpDescription string
+	if len(hp.aliases) <= 0 {
+		helpDescription = codeDescription
+	} else {
+		helpDescription = fmt.Sprintf("%v. Alternatives: %v", codeDescription, strings.Join(hp.aliases, ", "))
 	}
 
 	children := make([]helpInfo, len(hp.Parameters))
@@ -119,32 +150,39 @@ func (hp *ChildCommand) Help() helpInfo {
 
 	return helpInfo{
 		code:         hp.Code,
-		description:  description,
-		usageSuffix:  "[...Parameters]",
+		description:  helpDescription,
+		usageSuffix:  "[...parameters]",
 		childrenName: "parameters",
 		children:     children,
 	}
 }
 
 func (hp *Parameter) Help() helpInfo {
-	var description strings.Builder
-
-	if hp.IsNumber {
-		description.WriteString(fmt.Sprintf("%v. Number", hp.Description))
-	} else if hp.IsBoolean {
-		description.WriteString(fmt.Sprintf("%v. Boolean", hp.Description))
+	// TODO add unit tests
+	var codeDescription string
+	if hp.Description == "" {
+		codeDescription = fmt.Sprintf("The %v", hp.Code)
 	} else {
-		description.WriteString(fmt.Sprintf("%v. String", hp.Description))
+		codeDescription = hp.Description
+	}
+
+	var helpDescription strings.Builder
+	if hp.IsNumber {
+		helpDescription.WriteString(fmt.Sprintf("%v. Number", codeDescription))
+	} else if hp.IsBoolean {
+		helpDescription.WriteString(fmt.Sprintf("%v. Boolean", codeDescription))
+	} else {
+		helpDescription.WriteString(fmt.Sprintf("%v. String", codeDescription))
 	}
 
 	if hp.IsOptional {
-		description.WriteString(" (optional)")
+		helpDescription.WriteString(" (optional)")
 	} else {
-		description.WriteString(" (required)")
+		helpDescription.WriteString(" (required)")
 	}
 
 	return helpInfo{
 		code:        fmt.Sprintf("--%v", hp.Code),
-		description: description.String(),
+		description: helpDescription.String(),
 	}
 }

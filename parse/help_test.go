@@ -22,7 +22,7 @@ func TestAppHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Owsome cli
 
-  usage: ows [command] [subcommand] [...Parameters]
+  usage: ows [command] [subcommand] [...parameters]
 
   commands:
     sss  -> SSS Queue Operations
@@ -52,7 +52,7 @@ func TestSssHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `SSS Queue Operations
 
-  usage: sss [subcommand] [...Parameters]
+  usage: sss [subcommand] [...parameters]
 
   subcommands:
     version      -> Show SSS version
@@ -82,7 +82,7 @@ func TestS4Help(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `S4 Bucket Operations
 
-  usage: s4 [subcommand] [...Parameters]
+  usage: s4 [subcommand] [...parameters]
 
   subcommands:
     make-bucket  -> Create S4 bucket
@@ -127,7 +127,7 @@ func TestSssListQueuesHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Lists SSS queues
 
-  usage: list-queues [...Parameters]
+  usage: list-queues [...parameters]
 
   parameters:
     --page-size -> pagination. Number (optional)
@@ -151,7 +151,7 @@ func TestSssSendMessageHelp(t *testing.T) {
 		assertNilError(t, err)
 		assertStringEquals(t, parsedOutput.helpMessage, `Send string message to SSS queue
 
-  usage: send-message [...Parameters]
+  usage: send-message [...parameters]
 
 parameters:
     --queue-url -> the url of the SSS queue. String (required)
