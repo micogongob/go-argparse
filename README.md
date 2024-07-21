@@ -7,10 +7,10 @@
 ### Usage
 
 ```bash
-go get github.com/micogongob/go-argparse@v0.1.0
+go get github.com/micov6/go-argparse@v0.1.0
 ```
 
-see [releases](https://github.com/micogongob/go-argparse/releases) for latest version
+see [releases](https://github.com/micov6/go-argparse/releases) for latest version
 <br>
 
 ```golang
@@ -18,7 +18,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/micogongob/go-argparse/parse"
+	"github.com/micov6/go-argparse/parse"
 )
 
 func main() {

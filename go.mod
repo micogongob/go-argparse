@@ -1,3 +1,3 @@
-module github.com/micogongob/go-argparse
+module github.com/micov6/go-argparse
 
 go 1.22.3
