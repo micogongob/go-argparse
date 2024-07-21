@@ -3,6 +3,8 @@ phases:
   install:
     runtime-versions:
       nodejs: 18
+    commands:
+      - sudo yum update gh
   build:
     commands:
       - ./scripts/release
