@@ -10,6 +10,7 @@ phases:
       - git config --global user.email $GIT_EMAIL
       - git config user.name
       - git config user.email
+      - sudo dnf swap gnupg2-minimal gnupg2-full
       # - gpg-agent --version
       - gpg --version
       - git config --global gpg.program gpg2
