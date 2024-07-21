@@ -94,4 +94,4 @@ see the [*_test.go](./parse) for more examples
 
 ### Contributing
 
-see [contribution](/CONTRIBUTING.md)
+see [CONTRIBUTING.md](/CONTRIBUTING.md)
