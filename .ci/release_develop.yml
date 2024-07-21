@@ -7,7 +7,8 @@ phases:
       # TODO sign commits and tags
       - git init
       - git remote add origin https://${GITHUB_ACCESS_TOKEN}@github.com/micov6/go-argparse.git
-      - git pull origin $CODEBUILD_WEBHOOK_HEAD_REF
+      # TODO point to develop
+      - git pull origin pull_request
       - ./scripts/install_github_cli.sh
   build:
     commands:
