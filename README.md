@@ -4,13 +4,14 @@
 - There's already the **flag** go package and others. Why reinvent the wheel? obviously, for learning purposes :P
 
 
-### usage
+### Usage
 
 ```bash
 go get github.com/micogongob/go-argparse@v0.1.0
 ```
 
 see [releases](https://github.com/micogongob/go-argparse/releases) for latest version
+<br>
 
 ```golang
 package main
@@ -73,21 +74,24 @@ func spanishHello(parameterValues map[string]parse.ParameterValue) error {
 ```
 
 where **app.Parse()** will parse the **os.Args** based on commands, childCommands, and parameters you've defined
+<br>
 
 example:
 ```bash
 go run main.go greet hello --name John
 // output: hello, John
 ```
+<br>
 
 or:
 ```bash
 go run main.go greet spanish-hello --name Juan
 // output: hola, como estas, Juan
 ```
+<br>
 
-see the [*_test.go](./parse) for usage in your code
+see the [*_test.go](./parse) for more examples
 
-### contributing
+### Contributing
 
 see [contribution](/CONTRIBUTING.md)
