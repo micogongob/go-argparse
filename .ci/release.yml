@@ -11,6 +11,7 @@ phases:
       - git config user.name
       - git config user.email
       - ./scripts/install_github_cli.sh
+      - gh auth login -p https --with-token $GITHUB_ACCESS_TOKEN -h github.com
       - cd repo
   build:
     commands:
