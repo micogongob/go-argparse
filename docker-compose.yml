@@ -1,6 +1,6 @@
 services:
   go:
-    image: golang:1.22.3-alpine
+    image: golang:1.18-alpine
     container_name: go-argparse-go
     volumes:
       - ./:/app
