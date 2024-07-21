@@ -10,7 +10,7 @@ phases:
       - git config --global user.email $GIT_EMAIL
       - git config user.name
       - git config user.email
-      - gpg-agent --version
+      # - gpg-agent --version
       - gpg --version
       - git config --global gpg.program gpg2
       - aws secretsmanager get-secret-value --secret-id $PRIVATE_KEY_SSM_KEY --query SecretBinary --output text | base64 --decode > key.pgp
