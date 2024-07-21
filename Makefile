@@ -5,3 +5,7 @@ test:
 
 fmt:
 	$(RUN_GO) fmt ./lib/...
+
+ci:
+	docker login -u $$DOCKER_HUB_USER -p $$DOCKER_HUB_PASS
+	docker-compose pull
