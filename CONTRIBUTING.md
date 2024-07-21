@@ -3,12 +3,12 @@
 
 ### Bugs / Issues
 
-see [issues](/issues) for existing issues or report any ones you encounter
+see [issues](https://github.com/micogongob/go-argparse/issues) for existing issues or report any ones you encounter
 
 ### Pull Requests
 
 - any contribution are welcome, just fork the project and point your pull requests to the **develop** branch
-- see [issues](/issues) for things to improve
+- see [issues](https://github.com/micogongob/go-argparse/issues) for things to improve
 - go through the code and implement the TODOs or refactor code blocks which you think can be improved
 
 ## Development

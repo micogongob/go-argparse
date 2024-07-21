@@ -10,7 +10,7 @@
 go get github.com/micogongob/go-argparse@v0.1.0
 ```
 
-see [releases](/releases) for latest version
+see [releases](https://github.com/micogongob/go-argparse/releases) for latest version
 
 ```golang
 package main
