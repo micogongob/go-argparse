@@ -10,11 +10,14 @@ phases:
       - git config --global user.email $GIT_EMAIL
       - git config user.name
       - git config user.email
+      - aws secretsmanager get-secret-value --secret-id $PRIVATE_KEY_SSM_KEY --query SecretBinary --output text | base64 --decode > key.pgp
+      - gpg --import key.pgp
+      - git config --global commit.gpgsign true
+      - git config --global user.signingkey $PRIVATE_KEY_NAME
       - ./scripts/install_github_cli.sh
       - echo $GITHUB_ACCESS_TOKEN > github_token
       - gh auth login -h github.com -p https --with-token < github_token
       - cd repo
   build:
     commands:
-      - ./scripts/release $MASTER_BRANCH $PIPELINE_BRANCH
-
+      - ./scripts/release $MASTER_BRANCH $PIPELINE_BRANCH $PRIVATE_KEY_PASSWORD
