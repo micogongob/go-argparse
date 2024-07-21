@@ -5,6 +5,7 @@ phases:
       nodejs: 18
     commands:
       - ./scripts/install_github_cli.sh
+      - git remote add origin https://${GITHUB_ACCESS_TOKEN}@github.com/micov6/go-argparse.git
   build:
     commands:
       - ./scripts/release
