@@ -90,7 +90,7 @@ go run main.go greet spanish-hello --name Juan
 ```
 <br>
 
-see the [*_test.go](./parse) for more examples
+see the [*_test.go](./) for more examples
 
 ### Contributing
 
