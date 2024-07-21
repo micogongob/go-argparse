@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      # TODO sign commits and tags
+      - git clone --branch $PIPELINE_BRANCH https://$GITHUB_ACCESS_TOKEN@github.com/micov6/go-argparse.git repo
+      - ./scripts/install_github_cli.sh
+      - cd repo
+  build:
+    commands:
+      - ./scripts/release $MASTER_BRANCH $PIPELINE_BRANCH
