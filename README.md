@@ -18,7 +18,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/micov6/go-argparse/parse"
+	"github.com/micov6/go-argparse"
 )
 
 func main() {
