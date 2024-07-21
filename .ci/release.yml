@@ -25,4 +25,4 @@ phases:
       - cd repo
   build:
     commands:
-      - ./scripts/release $MASTER_BRANCH $PIPELINE_BRANCH $PRIVATE_KEY_PASSWORD
+      - ./scripts/release $PIPELINE_BRANCH $MASTER_BRANCH $DEVELOP_BRANCH $PRIVATE_KEY_PASSWORD
