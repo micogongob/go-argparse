@@ -1,7 +1,7 @@
-RUN_GO ?= go
+RUN_GO ?= docker-compose run --rm go go
 
 test:
-	$(RUN_GO) test github.com/...
+	$(RUN_GO) test ./parse
 
 fmt:
-	$(RUN_GO) fmt github.com/...
+	$(RUN_GO) fmt ./...
