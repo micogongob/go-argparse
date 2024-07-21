@@ -3,11 +3,10 @@ phases:
   install:
     runtime-versions:
       nodejs: 18
+  build:
     commands:
       - git init
       - git remote add origin https://${GITHUB_ACCESS_TOKEN}@github.com/micov6/go-argparse.git
       - git pull origin $CODEBUILD_WEBHOOK_HEAD_REF
       - ./scripts/install_github_cli.sh
-  build:
-    commands:
       - ./scripts/release
